@@ -27,9 +27,9 @@
             <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in projectOptions"
-                :key="item.menu_id"
-                :label="item.menuu_name"
-                :value="item.menu_id"
+                :key="item.menu_level_parent"
+                :label="item.menu_parent_name"
+                :value="item.menu_level_parent"
               ></el-option>
             </el-select>
           </template>
@@ -150,13 +150,25 @@ export default {
   // },
   mounted() {
     let _this = this;
-      // 这是我写的菜单接口
+    
       this.$ajax({
       url:api.queryMenu,
       data:{},
       type:"GET",
       success:function(data){
         _this.requireCustOptions=data.data.list;
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+//这是要改接口
+    this.$ajax({
+      url:api.queryMenu,
+      data:{},
+      type:"GET",
+      success:function(data){
+        _this.projectOptions=data.data.list;
       },
       error: function (data){
         console.log(data);
