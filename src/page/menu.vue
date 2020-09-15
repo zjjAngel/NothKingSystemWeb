@@ -40,9 +40,10 @@
             <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in projectOptions"
-                :key="item.role_id"
-                :label="item.role_name"
-                :value="item.role_id"
+                :key="item.status"
+                :label="上线"
+                :value="item.status"
+              
               ></el-option>
             </el-select>
           </template>
@@ -163,6 +164,18 @@ export default {
       },
     });
 //这是要改接口
+    this.$ajax({
+      url:api.queryMenu,
+      data:{},
+      type:"GET",
+      success:function(data){
+        _this.projectOptions=data.data.list;
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+    
     this.$ajax({
       url:api.queryMenu,
       data:{},
