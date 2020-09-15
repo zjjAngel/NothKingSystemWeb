@@ -47,3 +47,8 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
  export const roleIdList = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/querySelectRole" //查询角色下拉框
  export const delUser = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/deleteUsrInfo" //删除用户
  export const editUser = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/updateUsrInfo" //修改用户
+/**
+ * 菜单管理
+ * @type {string}
+ */
+ export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu"

@@ -237,10 +237,11 @@ export default {
         pageSize: this.pageSize,
       };
       this.$ajax({
-        url: api.queryUser,
+        url: api.queryMenu,
         data: queryData,
         type: "GET",
         success: function (data) {
+            console.log(data);
           _this.tableData = data.data.list;
           _this.total = data.data.total;
         },
