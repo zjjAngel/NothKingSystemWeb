@@ -51,4 +51,4 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
 
  export const roleNameList = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryRoleMngMenuInfo"//角色管理名称下拉框
  
- export const urlfortest = "http://www.baidu.com"//下回·删掉                                            
+ export const roleselect = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId"//根据不同角色查询                                            

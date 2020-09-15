@@ -134,6 +134,19 @@ this.$ajax({
         console.log(data);
       },
     });
+
+    //这是我写的接口
+    this.$ajax({
+      url:api.roleselect,
+      data:{},
+      type:"GET",
+      success:function(data){
+        _this.roleselect = data;//错就在这里
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
   },
 
   methods: {
