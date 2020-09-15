@@ -61,13 +61,14 @@
         <el-row>
           <template>
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="user_id" align="center" label="菜单ID"></el-table-column>
-              <el-table-column prop="user_name" align="center" label="菜单名称"></el-table-column>
-              <el-table-column prop="create_time" align="center" label="菜单级别"></el-table-column>
-              <el-table-column prop="user_role" align="center" label="父级菜单"></el-table-column>
-              <el-table-column prop="user_role" align="center" label="路径"></el-table-column>
+              <el-table-column prop="menu_id" align="center" label="菜单ID"></el-table-column>
+              <el-table-column prop="menu_name" align="center" label="菜单名称"></el-table-column>
+              <el-table-column prop="menu_level" align="center" label="菜单级别"></el-table-column>
+              <el-table-column prop="menu_level_parent" align="center" label="父级菜单"></el-table-column>
+              <el-table-column prop="path" align="center" label="路径"></el-table-column>
               <el-table-column prop="back_up" align="center" label="备注"></el-table-column>
-              <el-table-column prop="back_up" align="center" label="状态"></el-table-column>
+              <el-table-column prop="status" align="center" label="状态" v-show="showOrNot()" > </el-table-column>
+              <el-table-column prop="status" align="center" label="状态"  ></el-table-column>
               <el-table-column fixed="right" align="center" label="操作">
                 <template slot-scope="scope">
                   <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
@@ -97,14 +98,14 @@
         </div>
       </el-row>
     </div>
-    <menuEditAdd
-      :formbox="formbox"
-      :formboxmsg="formboxmsg"
-      :options="optionsArray"
-      @close="closebox"
-      @submit="submitbox"
-      @resetPas="resetPas"
-    ></menuEditAdd>
+<!--    <menuEditAdd-->
+<!--      :formbox="formbox"-->
+<!--      :formboxmsg="formboxmsg"-->
+<!--      :options="optionsArray"-->
+<!--      @close="closebox"-->
+<!--      @submit="submitbox"-->
+<!--      @resetPas="resetPas"-->
+<!--    ></menuEditAdd>-->
   </div>
 </template>
 
@@ -112,11 +113,12 @@
 <script>
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
-import menuEditAdd from "@/components/menuEditAdd";
+// import menuEditAdd from "@/components/menuEditAdd";
 export default {
   name: "menu",
   data() {
     return {
+      // status:1,
       dialogVisible: false,
       requireCustOptions: [],
       pageNum: 1,
@@ -141,9 +143,9 @@ export default {
       formboxmsg: {},
     };
   },
-  components: {
-    menuEditAdd,
-  },
+  // components: {
+  //   menuEditAdd,
+  // },
   mounted() {
     let _this = this;
     // const queryData = {
@@ -237,10 +239,11 @@ export default {
         pageSize: this.pageSize,
       };
       this.$ajax({
-        url: api.queryUser,
+        url: api.queryMenu,
         data: queryData,
         type: "GET",
         success: function (data) {
+          console.log(data);
           _this.tableData = data.data.list;
           _this.total = data.data.total;
         },
@@ -346,6 +349,14 @@ export default {
     addcust() {
       this.formbox = 2;
     },
+      showOrNot(){
+        console.log(this.tableData.status);
+       if(this.tableData.status==1){
+           return true
+       }else if(this.tableData.status==0) {
+           return false
+       }
+      }
   },
 };
 </script>

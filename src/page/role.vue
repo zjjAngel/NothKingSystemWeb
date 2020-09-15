@@ -38,7 +38,7 @@
         <el-row>
           <template>
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="role_id" align="center" label="角色ID"></el-table-column>
+              <el-table-column prop="user_role" align="center" label="角色ID"></el-table-column>
               <el-table-column prop="role_name" align="center" label="角色名称"></el-table-column>
               <el-table-column prop="back_up" align="center" label="备注"></el-table-column>
               <el-table-column fixed="right" align="center" label="操作">
@@ -195,9 +195,9 @@ this.$ajax({
     queryData(){
       let _this = this
 
-      console.log(_this.roleNameValue) 
+      console.log(_this.roleNameValue)
 
-      
+
 
       const queryData = {
       pageNum: this.pageNum,
@@ -208,6 +208,7 @@ this.$ajax({
         data: queryData,
         type: "GET",
         success: function (data) {
+            console.log(data);
           _this.tableData = data.data.list;
           _this.total = data.data.total;
         },

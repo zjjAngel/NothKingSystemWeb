@@ -47,8 +47,12 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
  export const roleIdList = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/querySelectRole" //查询角色下拉框
  export const delUser = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/deleteUsrInfo" //删除用户
  export const editUser = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/updateUsrInfo" //修改用户
-
-
  export const roleNameList = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryRoleMngMenuInfo"//角色管理名称下拉框
- 
- export const roleselect = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId"//根据不同角色查询                                            
+
+ export const urlfortest = "http://www.baidu.com"//下回·删掉
+
+/**
+ * 菜单管理
+ * @type {string}
+ */
+export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu"
