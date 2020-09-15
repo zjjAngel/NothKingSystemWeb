@@ -52,3 +52,8 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
  * @type {string}
  */
  export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu"
+
+
+ export const roleNameList = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryRoleMngMenuInfo"//角色管理名称下拉框
+
+ export const urlfortest = "http://www.baidu.com"//下回·删掉

@@ -11,12 +11,12 @@
         <el-col :span="5">
           <template>
             <span>角色名称</span>
-            <el-select style="width:10vw" v-model="requireCust" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="roleNameValue" size="mini" placeholder="请选择">
               <el-option
-                v-for="item in requireCustOptions"
-                :key="item.user_id"
-                :label="item.user_name"
-                :value="item.user_id"
+                v-for="item in roleNameList"
+                :key="item.role_ID"
+                :label="item.role_NAME"
+                :value="item.role_ID"
               ></el-option>
             </el-select>
           </template>
@@ -113,6 +113,8 @@ export default {
       ],
       formbox: 0,
       formboxmsg: {},
+      roleNameValue:'',
+      roleNameList:[],
     };
   },
   components: {
@@ -120,55 +122,23 @@ export default {
   },
   mounted() {
     let _this = this
-    // const queryData = {
-    //   pageNum: this.pageNum,
-    //   pageSize: this.pageSize,
-    // };
-    // this.$ajax({
-    //   url: api.queryUser,
-    //   data: queryData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.tableData = data.data.list;
-    //     _this.total = data.data.total;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
-
-    // const userData = {}
-    // this.$ajax({
-    //   url: api.userList,
-    //   data: userData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.projectOptions = data.data;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
-
-  const roleList = {}
 this.$ajax({
-      url: api.roleIdList,
-      data: roleList,
+      url: api.roleNameList,
+      data: {},
       type: "GET",
       success: function (data) {
-        _this.optionsArray = data.data;
+        // console.log("接口返回值",data)
+        _this.roleNameList = data.data.list;
       },
       error: function (data) {
         console.log(data);
       },
     });
-
-
-
-
-
   },
+
   methods: {
+
+
     handleClick(row, action) {
       let _this = this;
       if (action == "less") {
@@ -211,6 +181,11 @@ this.$ajax({
     },
     queryData(){
       let _this = this
+
+      console.log(_this.roleNameValue) 
+
+      
+
       const queryData = {
       pageNum: this.pageNum,
       pageSize: this.pageSize,
