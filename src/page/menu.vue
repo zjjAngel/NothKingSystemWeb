@@ -14,9 +14,9 @@
             <el-select style="width:10vw" v-model="requireCust" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in requireCustOptions"
-                :key="item.user_id"
-                :label="item.user_name"
-                :value="item.user_id"
+                :key="item.menu_id"
+                :label="item.menu_name"
+                :value="item.menu_id"
               ></el-option>
             </el-select>
           </template>
@@ -27,9 +27,9 @@
             <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in projectOptions"
-                :key="item.role_id"
-                :label="item.role_name"
-                :value="item.role_id"
+                :key="item.menu_id"
+                :label="item.menuu_name"
+                :value="item.menu_id"
               ></el-option>
             </el-select>
           </template>
@@ -141,6 +141,8 @@ export default {
       tableData: [],
       formbox: 0,
       formboxmsg: {},
+      menuname:'',
+      menulist:[],
     };
   },
   // components: {
@@ -148,6 +150,24 @@ export default {
   // },
   mounted() {
     let _this = this;
+      // 这是我写的菜单接口
+      this.$ajax({
+      url:api.queryMenu,
+      data:{},
+      type:"GET",
+      success:function(data){
+        _this.requireCustOptions=data.data.list;
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+
+
+
+
+
+
     // const queryData = {
     //   pageNum: this.pageNum,
     //   pageSize: this.pageSize,
