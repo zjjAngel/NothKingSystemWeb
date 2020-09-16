@@ -17,11 +17,8 @@
                 :key="item.menu_id"
                 :label="item.menu_name"
                 :value="item.menu_id"
-<<<<<<< HEAD
-              ></el-option>
-=======
               @click.native="checkFather(item.menu_id,item.menu_level_parent)" ></el-option>
->>>>>>> 6521de1d2a7392cbb866ba938ed2ed81e8ad931a
+
             </el-select>
           </template>
         </el-col>
