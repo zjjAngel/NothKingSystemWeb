@@ -146,35 +146,23 @@ export default {
   // },
   mounted() {
     let _this = this;
-    // const queryData = {
-    //   pageNum: this.pageNum,
-    //   pageSize: this.pageSize,
-    // };
-    // this.$ajax({
-    //   url: api.queryUser,
-    //   data: queryData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.tableData = data.data.list;
-    //     _this.total = data.data.total;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
-
-    // const userData = {}
-    // this.$ajax({
-    //   url: api.userList,
-    //   data: userData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.projectOptions = data.data;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
+      const queryData = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+      };
+      this.$ajax({
+          url: api.queryMenu,
+          data: queryData,
+          type: "GET",
+          success: function (data) {
+              console.log(data);
+              _this.tableData = data.data.list;
+              _this.total = data.data.total;
+          },
+          error: function (data) {
+              console.log(data);
+          },
+      });
 
     const queryMenu2 = {};
     this.$ajax({
