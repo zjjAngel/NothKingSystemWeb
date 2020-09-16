@@ -14,22 +14,22 @@
             <el-select style="width:10vw" v-model="requireCust" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in requireCustOptions"
-                :key="item.user_id"
-                :label="item.user_name"
-                :value="item.user_id"
-              ></el-option>
+                :key="item.menu_id"
+                :label="item.menu_name"
+                :value="item.menu_id"
+              @click.native="checkFather(item.menu_id,item.menu_level_parent)" ></el-option>
             </el-select>
           </template>
         </el-col>
         <el-col :span="5">
           <template>
             <span>父级菜单</span>
-            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="project" id="father" size="mini" placeholder="请选择">
               <el-option
-                v-for="item in projectOptions"
-                :key="item.role_id"
-                :label="item.role_name"
-                :value="item.role_id"
+                v-for="item in fatherMenu"
+                :key="item.menu_id"
+                :label="item.menu_name"
+                :value="item.menu_id"
               ></el-option>
             </el-select>
           </template>
@@ -37,13 +37,9 @@
         <el-col :span="5">
           <template>
             <span>状态</span>
-            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in projectOptions"
-                :key="item.role_id"
-                :label="item.role_name"
-                :value="item.role_id"
-              ></el-option>
+            <el-select style="width:10vw" v-model="status" size="mini" placeholder="请选择">
+              <el-option label="上线" value="1" ></el-option>
+              <el-option label="下线" value="0" ></el-option>
             </el-select>
           </template>
         </el-col>
@@ -67,8 +63,9 @@
               <el-table-column prop="menu_level_parent" align="center" label="父级菜单"></el-table-column>
               <el-table-column prop="path" align="center" label="路径"></el-table-column>
               <el-table-column prop="back_up" align="center" label="备注"></el-table-column>
-              <el-table-column prop="status" align="center" label="状态" v-show="showOrNot()" > </el-table-column>
-              <el-table-column prop="status" align="center" label="状态"  ></el-table-column>
+              <el-table-column prop="status" align="center" label="状态" :formatter="stateFormat" >
+              </el-table-column>
+<!--              <el-table-column prop="status" align="center" label="状态"  ></el-table-column>-->
               <el-table-column fixed="right" align="center" label="操作">
                 <template slot-scope="scope">
                   <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
@@ -115,16 +112,16 @@ import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
 // import menuEditAdd from "@/components/menuEditAdd";
 export default {
-  name: "menu",
+  name: "menuM",
   data() {
     return {
-      // status:1,
       dialogVisible: false,
       requireCustOptions: [],
       pageNum: 1,
       pageSize: 10,
       total: 0, //总条数
       projectOptions: [],
+      fatherMenu:[],
       optionsArray: [
         {
           value: "1",
@@ -138,6 +135,7 @@ export default {
       requireCust: "",
       project: "",
       position: "",
+      status:"",
       tableData: [],
       formbox: 0,
       formboxmsg: {},
@@ -178,13 +176,15 @@ export default {
     //   },
     // });
 
-    const roleList = {};
+    const queryMenu2 = {};
     this.$ajax({
-      url: api.roleIdList,
-      data: roleList,
+      url: api.queryMenu,
+      data: queryMenu2,
       type: "GET",
       success: function (data) {
         _this.optionsArray = data.data;
+        _this.requireCustOptions=data.data.list;
+        // _this.projectOptions=data.data.list;
       },
       error: function (data) {
         console.log(data);
@@ -192,7 +192,9 @@ export default {
     });
   },
   methods: {
+
     handleClick(row, action) {
+        console.log(row);
       let _this = this;
       if (action == "less") {
         this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
@@ -349,16 +351,65 @@ export default {
     addcust() {
       this.formbox = 2;
     },
-      showOrNot(){
-        console.log(this.tableData.status);
-       if(this.tableData.status==1){
-           return true
-       }else if(this.tableData.status==0) {
-           return false
-       }
-      }
+      stateFormat(row, column) {
+          console.log(row.status)
+          console.log('column:'+column);
+          if (row.status === '1') {
+              return '上线'
+          } else if (row.state === '0') {
+              return '下线'
+          }else {
+              return '异常状态'
+          }
+      },
+      checkFather(menuId,fatherMenuId){
+          let _this = this;
+        console.log(menuId+"-"+fatherMenuId);
+          // this.axios({
+          // url: api.queryMenu+"?menu_id="+menuId+"&menu_level_parent="+fatherMenuId,
+          // method: "get"
+          // }).then(res=>{
+          //     console.log(res);
+          //     this.projectOptions=res;
+          // }).catch(err=>{
+          //     console.log(err);
+          // })
+          // this.$ajax({
+          //     url: api.queryMenu,
+          //
+          // })
+          const queryMenu3 = {"menu_id":fatherMenuId};
+          // _this.fatherMenu=[];
+          this.$ajax({
+              url: api.queryMenu,
+              data: queryMenu3,
+              type: "GET",
+              async: false,
+              success: function (data) {
+                  console.log(data);
+                  document.getElementById("father").value="";
+                  _this.fatherMenu=data.data.list;
+                  debugger;
+              },
+              error: function (data) {
+                  console.log(data);
+              },
+          });
+
+      },
+
+
+
+
   },
 };
+
+// var app2 = new Vue({
+//     el:"#fatherMenu",
+//     data:{
+//         fatherMenu:[]
+//     }
+// });
 </script>
 
 <style scoped>
