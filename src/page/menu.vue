@@ -18,7 +18,6 @@
                 :label="item.menu_name"
                 :value="item.menu_id"
               @click.native="checkFather(item.menu_id,item.menu_level_parent)" ></el-option>
-
             </el-select>
           </template>
         </el-col>
@@ -38,7 +37,6 @@
         <el-col :span="5">
           <template>
             <span>状态</span>
-
             <el-select style="width:10vw" v-model="status" size="mini" placeholder="请选择">
               <el-option label="上线" value="1" ></el-option>
               <el-option label="下线" value="0" ></el-option>
@@ -141,8 +139,6 @@ export default {
       tableData: [],
       formbox: 0,
       formboxmsg: {},
-      menuname:'',
-      menulist:[],
     };
   },
   // components: {
@@ -150,77 +146,23 @@ export default {
   // },
   mounted() {
     let _this = this;
-    
+      const queryData = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+      };
       this.$ajax({
-      url:api.queryMenu,
-      data:{},
-      type:"GET",
-      success:function(data){
-        _this.requireCustOptions=data.data.list;
-      },
-      error: function (data){
-        console.log(data);
-      },
-    });
-//这是要改接口
-    this.$ajax({
-      url:api.queryMenu,
-      data:{},
-      type:"GET",
-      success:function(data){
-        _this.projectOptions=data.data.list;
-      },
-      error: function (data){
-        console.log(data);
-      },
-    });
-    
-    this.$ajax({
-      url:api.queryMenu,
-      data:{},
-      type:"GET",
-      success:function(data){
-        _this.projectOptions=data.data.list;
-      },
-      error: function (data){
-        console.log(data);
-      },
-    });
-
-
-
-
-
-
-    // const queryData = {
-    //   pageNum: this.pageNum,
-    //   pageSize: this.pageSize,
-    // };
-    // this.$ajax({
-    //   url: api.queryUser,
-    //   data: queryData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.tableData = data.data.list;
-    //     _this.total = data.data.total;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
-
-    // const userData = {}
-    // this.$ajax({
-    //   url: api.userList,
-    //   data: userData,
-    //   type: "GET",
-    //   success: function (data) {
-    //     _this.projectOptions = data.data;
-    //   },
-    //   error: function (data) {
-    //     console.log(data);
-    //   },
-    // });
+          url: api.queryMenu,
+          data: queryData,
+          type: "GET",
+          success: function (data) {
+              console.log(data);
+              _this.tableData = data.data.list;
+              _this.total = data.data.total;
+          },
+          error: function (data) {
+              console.log(data);
+          },
+      });
 
     const queryMenu2 = {};
     this.$ajax({
