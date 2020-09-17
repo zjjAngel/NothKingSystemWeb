@@ -377,7 +377,8 @@ export default {
                   console.log(data);
                   document.getElementById("father").value="";
                   _this.fatherMenu=data.data.list;
-                  debugger;
+                  document.getElementById("father").placeholder=data.data.list[0].menu_name;
+                  document.getElementById("father").value=data.data.list[0].menu_name;
               },
               error: function (data) {
                   console.log(data);
