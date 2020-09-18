@@ -38,8 +38,8 @@
           <template>
             <span>状态</span>
             <el-select style="width:10vw" v-model="status" size="mini" placeholder="请选择">
-              <el-option label="上线" value="1" ></el-option>
-              <el-option label="下线" value="0" ></el-option>
+              <el-option label="上线" value="1" @click.native="addstatus()"></el-option>
+              <el-option label="下线" value="0" @click.native="addstatus()"></el-option>
             </el-select>
           </template>
         </el-col>
@@ -139,6 +139,14 @@ export default {
       tableData: [],
       formbox: 0,
       formboxmsg: {},
+        inputAjax:{
+          "menu_id":"",
+          "menuName":"",
+          "menu_level_parent":"",
+          "status":"",
+            "pageSize":"",
+            "pageNum":""
+        }
     };
   },
   // components: {
@@ -224,10 +232,11 @@ export default {
     },
     queryData() {
       let _this = this;
-      const queryData = {
+      let queryData = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
       };
+      queryData=_this.inputAjax;
       this.$ajax({
         url: api.queryMenu,
         data: queryData,
@@ -350,9 +359,15 @@ export default {
               return '异常状态'
           }
       },
+      addstatus(){
+        let _this=this;
+         _this.inputAjax.status=_this.status;
+      },
       checkFather(menuId,fatherMenuId){
           let _this = this;
         console.log(menuId+"-"+fatherMenuId);
+        _this.inputAjax.menu_id=menuId;
+        _this.inputAjax.menu_level_parent=fatherMenuId;
           // this.axios({
           // url: api.queryMenu+"?menu_id="+menuId+"&menu_level_parent="+fatherMenuId,
           // method: "get"
@@ -379,6 +394,7 @@ export default {
                   _this.fatherMenu=data.data.list;
                   document.getElementById("father").placeholder=data.data.list[0].menu_name;
                   document.getElementById("father").value=data.data.list[0].menu_name;
+
               },
               error: function (data) {
                   console.log(data);
