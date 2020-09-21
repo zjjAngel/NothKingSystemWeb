@@ -95,14 +95,14 @@
         </div>
       </el-row>
     </div>
-<!--    <menuEditAdd-->
-<!--      :formbox="formbox"-->
-<!--      :formboxmsg="formboxmsg"-->
-<!--      :options="optionsArray"-->
-<!--      @close="closebox"-->
-<!--      @submit="submitbox"-->
-<!--      @resetPas="resetPas"-->
-<!--    ></menuEditAdd>-->
+    <menuEditAdd
+      :formbox="formbox"
+      :formboxmsg="formboxmsg"
+      :options="optionsArray"
+      @close="closebox"
+      @submit="submitb"
+      @resetPas="resetPas"
+    ></menuEditAdd>
   </div>
 </template>
 
@@ -110,7 +110,7 @@
 <script>
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
-// import menuEditAdd from "@/components/menuEditAdd";
+import menuEditAdd from "@/components/menuEditAdd";
 export default {
   name: "menuM",
   data() {
@@ -149,9 +149,9 @@ export default {
         }
     };
   },
-  // components: {
-  //   menuEditAdd,
-  // },
+  components: {
+    menuEditAdd,
+  },
   mounted() {
     let _this = this;
       const queryData = {
@@ -220,6 +220,7 @@ export default {
             });
           })
           .catch(() => {
+              debugger;
             this.$message({
               type: "info",
               message: "已取消删除",
@@ -227,7 +228,22 @@ export default {
           });
       } else {
         this.formbox = 1;
-        this.formboxmsg = row;
+        // this.formboxmsg = row;
+          _this.formboxmsg.mobileno="";
+          _this.formboxmsg.mobileno=row.menu_name;
+          _this.formboxmsg.transRole=row;
+          _this.formboxmsg.options=row;
+          _this.formboxmsg.menu_level=row.menu_level;
+          _this.formboxmsg.path=row.path;
+          _this.formboxmsg.back_up=row.back_up;
+          debugger;
+          // _this.formboxmsg.status=row.status=;
+          if (row.status='1'){
+              _this.formboxmsg.status= "在线";
+          }else {
+              _this.formboxmsg.status= "下线";
+          }
+
       }
     },
     queryData() {
@@ -301,15 +317,16 @@ export default {
           // });
         });
     },
-    submitbox(e) {
+    submitb(e) {
       console.log(e);
       let _this = this;
+        debugger;
       if (e.formbox == 1) {
         // 编辑
         this.$ajax({
-          url: api.requireUpdateRequire,
+          url: api.updateMenuMngerInfo,
           data: e.formboxmsg,
-          type: "POST",
+          type: "PUT",
           success: function (data) {
             _this.formbox = 0;
           },
@@ -392,7 +409,7 @@ export default {
                   console.log(data);
                   document.getElementById("father").value="";
                   _this.fatherMenu=data.data.list;
-                  document.getElementById("father").placeholder=data.data.list[0].menu_name;
+                  // document.getElementById("father").placeholder=data.data.list[0].menu_name;
                   document.getElementById("father").value=data.data.list[0].menu_name;
 
               },
@@ -404,7 +421,35 @@ export default {
       },
 
 
-
+      // submit:function (msg) {
+      //     // let  _this=this;
+      //     let msg1 = {
+      //         formbox: this.formbox,
+      //         formboxmsg: this.formboxmsg,
+      //     };
+      //     this.$ajax({
+      //         url: api.updateMenuMngerInfo,
+      //         data: {
+      //             menuId: "M_919679488",
+      //             menuName: "客户管理",
+      //             menu_level_parent:"0",
+      //             menu_level:"1",
+      //             path:"/menu/menu001",
+      //             back_up:"er",
+      //             status:"0"
+      //         },
+      //         type: "PUT",
+      //         success: function(data) {
+      //             debugger;
+      //             _this.$set(_this.tableData, "tableDataItem", data.data);
+      //         },
+      //         error: function(data) {
+      //             debugger;
+      //             if (data == 500) {
+      //             }
+      //         }
+      //     });
+      // }
 
   },
 };

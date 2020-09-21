@@ -55,6 +55,6 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
  * 菜单管理
  * @type {string}
  */
-export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu"
-
+export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu";
+export const updateMenuMngerInfo ="http://188.131.134.15:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
 // export const queryMenu = "http://127.0.0.1:8089/api/NothKingSystem/menu/queryMenu"
