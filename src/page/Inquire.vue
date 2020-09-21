@@ -15,19 +15,19 @@
                 :key="item.requireCust"
                 :label="item.requireCust"
                 :value="item.requireCust"
-              ></el-option>
+              @click.native="changeInquire(item.requireCust)"></el-option>
             </el-select>
           </template>
         </el-col>
         <el-col :span="5">
           <template>
             <span>项目</span>
-            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择" id="resIn">
               <el-option
-                v-for="item in projectlist"
-                :key="item.prono"
-                :label="item.proname"
-                :value="item.prono"
+                v-for="item in project"
+                :key="item.option"
+                :label="item.requireCust"
+                :value="item.option"
               ></el-option>
             </el-select>
           </template>
@@ -66,7 +66,8 @@
         <el-col :span="4">
           
 
-          <el-button type="primary" @click="queryData">搜索</el-button>
+          <el-button type="primary" @click="queryData" >搜索</el-button>
+          
 
         </el-col>
       </el-row>
@@ -78,8 +79,8 @@
         </el-row>
         <el-row>
           <template>
-            <el-table :data="tableData.tableDataItem" style="width: 100%">
-              <el-table-column prop="number" align="center" label="编号"></el-table-column>
+            <el-table :data="tableData" style="width: 100%">
+              <el-table-column prop="numNo" align="center" label="编号"></el-table-column>
               <!-- <el-table-column prop="requireCust" align="" label="需求客户"></el-table-column> -->
               <el-table-column prop="project" align="center" label="项目"></el-table-column>
               <el-table-column prop="position" align="center" label="岗位"></el-table-column>
@@ -134,13 +135,12 @@
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
 import clientFormbox from "@/components/clientFormbox";
-// http://localhost:8080/#/index/demandManage/Inquire
 export default {
   name: "Inquire",
   data() {
     return {
       requireCustOptions: [],
-      projectlist:[],//
+      projectlist:[],
       projectOptions: [],
        pageNum: 1,
        pageSize: 10,
@@ -186,9 +186,7 @@ export default {
       project: "",
       position: "",
       priority: "",
-      tableData: {
-        tableDataItem: []
-      },
+      tableData:[],
       formbox: 0,
       formboxmsg: {}
     };
@@ -204,37 +202,51 @@ mounted(){
       data:{"option":"01"},//查询需求客户
       type:"POST",
       success:function(data){
-        _this.requireCustOptions=data.data;//
-        
+        _this.requireCustOptions=data.data;
       },
       error: function (data){
         console.log(data);
       },
     });
 
+    this.$ajax({
 
- const queryData = {
-          pageNum: this.pageNum,
-          pageSize: this.pageSize,
-      };
-
-      this.$ajax({
-          url: api.RequireSearch,
-          data: queryData,
-          type: "POST",
-          success: function (data) {
-              console.log(data);
-              _this.tableData = data;
-             // _this.total = data.data.total;
-          },
-          error: function (data) {
-              console.log(data);
-          },
-      });
+      url:api.RequireSearch,
+      data:{"option":"03"},
+      type:"POST",
+      success:function(data){
+        debugger;
+        console.log.data;
+         _this.tableData= data.data;//here
+        
+      },
+      error:function(data){
+        console.log(data);
+      },
+    })
 
 },
 
-  methods: {
+  methods:{
+    changeInquire(obj){
+      
+      let _this = this;
+      this.$ajax({
+      url:api.RequireSearch,
+      data:{"option":"02"
+      ,"requireCust":obj
+      },//查询需求客户
+      type:"POST",
+      success:function(data){
+        _this.requireCustOptions=data.data;//
+        document.getElementById("resIn").value=data.data[0].project;
+        
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+    },
     handleClick(row, action) {
       let _this = this
       if (action == "less") {
@@ -285,7 +297,7 @@ mounted(){
       this.$ajax({
         url: api.RequireSearch,
         data: queryData,
-        type: "GET",
+        type: "POST",
         success: function (data) {
           console.log(data);
           _this.tableData = data.data.list;
@@ -417,5 +429,15 @@ mounted(){
   margin-bottom: 10px;
   margin-right: 50px;
   text-align: right;
+}
+.pageChange {
+  display: flex;
+  align-items: center;
+}
+.pageStyle {
+  height: 35px;
+  margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

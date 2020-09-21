@@ -11,7 +11,7 @@
         <el-col :span="5">
           <template>
             <span>角色名称</span>
-            <el-select style="width:10vw" v-model="roleNameValue" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="roleNameValue" size="mini" id="role1" placeholder="请选择" @change="fillData">
               <el-option
                 v-for="item in roleNameList"
                 :key="item.role_ID"
@@ -115,13 +115,14 @@ export default {
       formboxmsg: {},
       roleNameValue:'',
       roleNameList:[],
+      inputQuery:{}
     };
   },
   components: {
     userEditAdd,
   },
   mounted() {
-    let _this = this
+    let _this = this;
 this.$ajax({
       url: api.roleNameList,
       data: {},
@@ -147,6 +148,24 @@ this.$ajax({
         console.log(data);
       },
     });
+
+      const queryData = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+      };
+      this.$ajax({
+          url: api.queryUser,
+          data: queryData,
+          type: "GET",
+          success: function (data) {
+              console.log(data);
+              _this.tableData = data.data.list;
+              _this.total = data.data.total;
+          },
+          error: function (data) {
+              console.log(data);
+          },
+      });
   },
 
   methods: {
@@ -192,16 +211,22 @@ this.$ajax({
         this.formboxmsg = row;
       }
     },
+    fillData(value){
+        console.log("select 中对应的value" +value);
+        // console.log("select 中对应的label" +label);
+        debugger;
+        this.inputQuery={"roleId":value};
+    },
     queryData(){
-      let _this = this
-
-      console.log(_this.roleNameValue)
-
-
+      let _this = this;
+      debugger;
+      console.log(document.getElementById("role1").value);
+      console.log(_this.roleNameValue);
 
       const queryData = {
       pageNum: this.pageNum,
       pageSize: this.pageSize,
+      "roleId": this.inputQuery.roleId
       };
       this.$ajax({
         url: api.queryUser,
