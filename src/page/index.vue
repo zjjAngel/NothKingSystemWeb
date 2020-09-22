@@ -91,37 +91,38 @@ export default {
           active: false,
           patch: "/index/projectManage"
         },
-        {
-          name: "系统管理",
-          id: "menuid3",
-          grade: true,
-          active: false,
-          patch: "/index/systemManage",
-          menu_item: [
-            {
-              name: "用户管理",
-              id: "menuid30",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/user"
-            },
-            {
-              name: "角色管理",
-              id: "menuid31",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/role"
-            },
-            {
-              name: "菜单管理",
-              id: "menuid32",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/menu"
-            }
-          ]
-        }
-      ]
+        // {
+        //   name: "系统管理",
+        //   id: "menuid3",
+        //   grade: true,
+        //   active: false,
+        //   patch: "/index/systemManage",
+        //   menu_item: [
+        //     {
+        //       name: "用户管理",
+        //       id: "menuid30",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/user"
+        //     },
+        //     {
+        //       name: "角色管理",
+        //       id: "menuid31",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/role"
+        //     },
+        //     {
+        //       name: "菜单管理",
+        //       id: "menuid32",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/menu"
+        //     }
+        //   ]
+        // }
+      ],
+        menus:{}
     };
   },
   components: {
@@ -149,7 +150,28 @@ export default {
          //     _this.putData(dataResult[i].menu_id,dataResult[i].menu_name
          //         ,dataResult[i].menu_level,dataResult[i].nextIdsMenu );
          // }
-     }
+     },
+     // findNext: function (fatherMenuId,objFirstLevel,level) {
+     //     let _this=this;
+     //     const queryData = {
+     //         menu_id: fatherMenuId
+     //     };
+     //     this.$ajax({
+     //        url: _this.api.queryMenuByNextLevel,
+     //        data:queryData,
+     //        type:"GET",
+     //         success:function (data) {
+     //             data
+     //            findNext();
+     //         },
+     //         error:function (data) {
+     //
+     //         }
+     //
+     //     })
+     //
+     //
+     // }
   },
   mounted() {
       let _this=this;
@@ -166,13 +188,60 @@ export default {
           success: function (data) {
               console.log(data);
               let dataResult = data.data;
-              _this.putData(dataResult);
+              // _this.putData(dataResult);
+              //渲染一级菜单
+              let datare;
+              for (let i = 0; i <dataResult.length ; i++) {
+                  _this.menus.name=dataResult[i].menu_name;
+                  _this.menus.id=dataResult[i].menu_id;
+                  _this.menus.patch= "/index/systemManage";
+                  _this.menus.grade= false;
+                  _this.menus.active=false;
+                  // debugger;
+                  datare= findNext(_this.menus.id,_this.menus,1);
+              }
+              _this.items.push(datare);
 
           },
           error: function (data) {
               console.log(data);
           },
       });
+
+     var findNext =function(fatherMenuId,objFirstLevel,level) {
+          let _this=this;
+          const queryData = {
+              menu_id: fatherMenuId
+          };
+          this.$ajax({
+              url: _this.api.queryMenuByNextLevel,
+              data:queryData,
+              type:"GET",
+              success:function (data) {
+                  debugger;
+                  let findNextResult;
+                  for (let i = 0; i <data.data.length ; i++) {
+                      if (level+1==data.data[i].level){
+                          return objFirstLevel;
+                      }
+                      objFirstLevel.menu_item[i].name=data.data[i].menu_name;
+                      objFirstLevel.menu_item[i].id=data.data[i].menu_id;
+                      objFirstLevel.menu_item[i].patch= "/index/systemManage";
+                      objFirstLevel.menu_item[i].grade= false;
+                      objFirstLevel.menu_item[i].active=false;
+                      findNextResult=   findNext(data.data[0].menu_id,objFirstLevel.menu_item[i],data.data[i].menu_level);
+                  }
+                return objFirstLevel;
+
+              },
+              error:function (data) {
+
+              }
+
+          })
+
+
+      }
 
   }
 };

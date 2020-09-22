@@ -62,4 +62,5 @@ export const updateMenuMngerInfo ="http://188.131.134.15:8088/api/NothKingSystem
 /**
  * 登录角色菜单管理
  */
-export  const queryMenuByRoleId="http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId"
+export  const queryMenuByRoleId="http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId";
+export  const  queryMenuByNextLevel="http://127.0.0.1:8081/api/NothKingSystem/roleMngMenu/queryMenuByNextLevel";
