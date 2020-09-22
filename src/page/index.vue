@@ -121,7 +121,23 @@ export default {
             }
           ]
         }
-      ]
+      ],
+        menus:{
+            name: "",
+            id: "",
+            grade: false,
+            active: false,
+            patch: "",
+            menu_item:[]
+        },
+        tmp:{
+            name: "",
+            id: "",
+            grade: false,
+            active: false,
+            patch: "",
+            menu_item:[]
+        }
     };
   },
   components: {
@@ -149,7 +165,28 @@ export default {
          //     _this.putData(dataResult[i].menu_id,dataResult[i].menu_name
          //         ,dataResult[i].menu_level,dataResult[i].nextIdsMenu );
          // }
-     }
+     },
+     // findNext: function (fatherMenuId,objFirstLevel,level) {
+     //     let _this=this;
+     //     const queryData = {
+     //         menu_id: fatherMenuId
+     //     };
+     //     this.$ajax({
+     //        url: _this.api.queryMenuByNextLevel,
+     //        data:queryData,
+     //        type:"GET",
+     //         success:function (data) {
+     //             data
+     //            findNext();
+     //         },
+     //         error:function (data) {
+     //
+     //         }
+     //
+     //     })
+     //
+     //
+     // }
   },
   mounted() {
       let _this=this;
@@ -166,13 +203,63 @@ export default {
           success: function (data) {
               console.log(data);
               let dataResult = data.data;
-              _this.putData(dataResult);
+              //渲染一级菜单
+              let datare;
+              for (let i = 0; i <dataResult.length ; i++) {
+                  debugger;
+                  _this.menus.name=dataResult[i].menu_name;
+                  _this.menus.id=dataResult[i].menu_id;
+                  _this.menus.patch= "/index/systemManage";
+                  _this.menus.grade= false;
+                  _this.menus.active=false;
+                  // _this.menus.menu_item=[{name:"",id:"",patch:"",grade:"",active:""}];
+                  // _this.menus.menu_item=findNext(dataResult[i].menu_id,_this.menus,1);
+                  // debugger;
+              }
+              _this.items.push(_this.menus);
 
           },
           error: function (data) {
               console.log(data);
           },
       });
+
+     var findNext =function(fatherMenuId,objFirstLevel,level) {
+
+          const queryData = {
+              menu_id: fatherMenuId
+          };
+          _this.$ajax({
+              url: api.queryMenuByNextLevel,
+              data:queryData,
+              type:"GET",
+              success:function (data) {
+                  debugger;
+                  // let findNextResult;
+                  var myArray=new Array()
+                  for (let i = 0; i <data.data.length ; i++) {
+                      var input1=_this.tmp;
+                      input1.name=data.data[i].menu_name;
+                      input1.id=data.data[i].menu_id;
+                      input1.patch="/index/systemManage";
+                      input1.grade=false;input1.active=false;
+                        // objFirstLevel.menu_item.push(input);
+                      myArray.push(input1);
+                      _this.items[i].menu_item=myArray;
+                      // findNextResult=   findNext(data.data[0].menu_id,objFirstLevel.menu_item[i],data.data[i].menu_level);
+                  }
+                // return objFirstLevel;
+
+              },
+              error:function (data) {
+
+              }
+
+          })
+
+
+      }
+
 
   }
 };
