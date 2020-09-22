@@ -20,6 +20,8 @@ export const projectAdd = "http://192.168.0.108:8088/project/add" // 项目添�
 export const projectUpdate = "http://192.168.0.108:8088/project/upd" // 项目编辑
 export const projectDel = "http://192.168.0.108:8088/project/del" // 项目编辑
 
+
+
 /**
  * 需求管理
  */
@@ -33,13 +35,16 @@ export const requireDeleteRequire = "http://192.168.0.108:8088/require/deleteReq
 
 export const requireSelectRequireCust = "http://192.168.0.108:8088/require/selectRequireCust" // 查询需求客户信息(头部枚举值)
 
+
 export const requireSelectRequireByCustName = "http://192.168.0.108:8088/require/selectRequireByCustName" // 根据客户查询需求项目信息(头部枚举值)
-   export const RequireSearch = "http://192.168.0.108:8088/require/selectRequire" //需求管理的搜索
+export const RequireSearch = "http://192.168.0.108:8088/require/selectRequire" //需求管理的搜索
+
 
 
 /*
  * 用户管理接口
  */
+
 
  export const addUser = "http://192.168.0.108:8088/api/NothKingSystem/SysUsrMnger/insertUsrInfo" //添加用户
  export const queryUser = "http://192.168.0.108:8088/api/NothKingSystem/SysUsrMnger/queryUsrInfo" //查询用户信息
@@ -50,6 +55,7 @@ export const requireSelectRequireByCustName = "http://192.168.0.108:8088/require
  export const roleNameList = "http://192.168.0.108:8088/api/NothKingSystem/roleMngMenu/queryRoleMngMenuInfo"//角色管理名称下拉框
  
 
+
 /**
  * 菜单管理
  * @type {string}
@@ -58,3 +64,7 @@ export const queryMenu = "http://192.168.0.108:8088/api/NothKingSystem/menu/quer
 export const updateMenuMngerInfo ="http://192.168.0.108:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
 // export const queryMenu = "http://127.0.0.1:8089/api/NothKingSystem/menu/queryMenu"
 
+/**
+ * 登录角色菜单管理
+ */
+export  const queryMenuByRoleId="http://192.168.0.108:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId"
