@@ -220,7 +220,7 @@ export default {
             });
           })
           .catch(() => {
-              debugger;
+              
             this.$message({
               type: "info",
               message: "已取消删除",
@@ -236,7 +236,7 @@ export default {
           _this.formboxmsg.menu_level=row.menu_level;
           _this.formboxmsg.path=row.path;
           _this.formboxmsg.back_up=row.back_up;
-          debugger;
+          
           // _this.formboxmsg.status=row.status=;
           if (row.status='1'){
               _this.formboxmsg.status= "在线";
@@ -320,7 +320,7 @@ export default {
     submitb(e) {
       console.log(e);
       let _this = this;
-        debugger;
+        
       if (e.formbox == 1) {
         // 编辑
         this.$ajax({

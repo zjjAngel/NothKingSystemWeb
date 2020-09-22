@@ -51,12 +51,13 @@ export const RequireSearch = "http://192.168.0.106:8088/require/selectRequire" /
 
  export const urlfortest = "http://www.baidu.com"//下回·删掉
 
+
 /**
  * 菜单管理
  * @type {string}
  */
-export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu";
-export const updateMenuMngerInfo ="http://188.131.134.15:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
+export const queryMenu = "http://192.168.0.108:8088/api/NothKingSystem/menu/queryMenu";
+export const updateMenuMngerInfo ="http://192.168.0.108:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
 // export const queryMenu = "http://127.0.0.1:8089/api/NothKingSystem/menu/queryMenu"
 
 /**

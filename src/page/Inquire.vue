@@ -118,12 +118,13 @@
         </div>
       </el-row>
     
-    <clientFormbox
-      :formbox="formbox"
-      :formboxmsg="formboxmsg"
+    <inquireEditAdd
+      :reqbox="reqbox"
+      :reqboxmsg="reqboxmsg"
+      
       @close="closebox"
       @submit="submitbox"
-    ></clientFormbox>
+    ></inquireEditAdd>
   </div>
  
   
@@ -134,7 +135,7 @@
 <script>
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
-import clientFormbox from "@/components/clientFormbox";
+import inquireEditAdd from "@/components/inquireEditAdd";
 export default {
   name: "Inquire",
   data() {
@@ -187,12 +188,12 @@ export default {
       position: "",
       priority: "",
       tableData:[],
-      formbox: 0,
-      formboxmsg: {}
+      reqbox: 0,
+      reqboxmsg: {}
     };
   },
   components: {
-    clientFormbox
+    inquireEditAdd,
   },
 
 mounted(){
@@ -202,6 +203,7 @@ mounted(){
       data:{"option":"01"},//查询需求客户
       type:"POST",
       success:function(data){
+        
         _this.requireCustOptions=data.data;
       },
       error: function (data){
@@ -215,9 +217,9 @@ mounted(){
       data:{"option":"03"},
       type:"POST",
       success:function(data){
-        debugger;
+        
         console.log.data;
-         _this.tableData= data.data;//here
+         _this.tableData= data.data;
         
       },
       error:function(data){
@@ -235,10 +237,10 @@ mounted(){
       url:api.RequireSearch,
       data:{"option":"02"
       ,"requireCust":obj
-      },//查询需求客户
+      },//查询项目
       type:"POST",
       success:function(data){
-        _this.requireCustOptions=data.data;//
+        _this.requireCustOptions=data.data;
         document.getElementById("resIn").value=data.data[0].project;
         
       },
@@ -248,6 +250,7 @@ mounted(){
     });
     },
     handleClick(row, action) {
+      console.log(row);
       let _this = this
       if (action == "less") {
         this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
@@ -259,11 +262,12 @@ mounted(){
             this.$ajax({
               url: api.requireDeleteRequire,
               data: {
-                "custno": row.number
+                //"prono": row.id
+                custno:row.number,
               },
               type: "POST",
               success: function(data) {
-                _this.formbox = 0;
+                _this.reqbox = 0;
                 console.log(data);
                 _this.$message({
                   type: "success",
@@ -283,8 +287,16 @@ mounted(){
             });
           });
       } else {
-        this.formbox = 1;
-        this.formboxmsg = row;
+        this.reqbox = 1;
+        //this.reqboxmsg = row;
+
+        _this.reqboxmsg.project=row.project;
+        _this.reqboxmsg.post=row.post;//要改
+        _this.reqboxmsg.renum = row.renum;
+        _this.reqboxmsg.requestion=row.requestion;
+        _this.reqboxmsg.priority=row.priority;
+
+
       }
     },
 
@@ -300,8 +312,8 @@ mounted(){
         type: "POST",
         success: function (data) {
           console.log(data);
-          _this.tableData = data.data.list;
-          _this.total = data.data.total;
+          _this.tableData = data;
+         // _this.total = data.data.total;
         },
         error: function (data) {
           console.log(data);
@@ -314,7 +326,7 @@ mounted(){
       this.pageSize = e;
     },
     closebox(e) {
-      this.formbox = 0;
+      this.reqbox = 0;
       this.$message({
         type: "info",
         message: "已取消"
@@ -323,30 +335,30 @@ mounted(){
     submitbox(e) {
       console.log(e);
       let _this = this;
-      if (e.formbox == 1) {
+      if (e.reqbox == 1) {
         // 编辑
         this.$ajax({
           url: api.requireUpdateRequire,
-          data: e.formboxmsg,
+          data: e.reqboxmsg,
           type: "POST",
           success: function(data) {
-            _this.formbox = 0;
+            _this.reqbox = 0;
           },
           error: function(data) {
             if (data == 500) {
             }
           }
         });
-      } else if (e.formbox == 2) {
+      } else if (e.reqbox == 2) {
         // 增加
         this.$ajax({
           url: api.requireAddRequire,
-          data: e.formboxmsg,
+          data: e.reqboxmsg,
           type: "POST",
           success: function(data) {
             console.log(data);
             //_this.tableData.tableDataItem.push(data.data);
-            _this.formbox = 0;
+            _this.reqbox = 0;
             _this.$message({
               type: "success",
               message: "新增成功!"
@@ -354,7 +366,7 @@ mounted(){
           },
           error: function(data) {
             if (data !== 500) {
-              _this.formbox = 0;
+              _this.reqbox = 0;
               _this.$message({
                 type: "info",
                 message: "新增失败!"
@@ -365,7 +377,7 @@ mounted(){
       }
     },
     addcust() {
-      this.formbox = 2;
+      this.reqbox = 2;
     }
   },
   // beforeMount: function() {
@@ -407,7 +419,7 @@ mounted(){
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  align-items: flex-end;
+  align-items: re-end;
 }
 .el-message-box {
   height: 50vh;

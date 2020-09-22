@@ -4,7 +4,7 @@
         <h1>vue-admin</h1>
         <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
         <el-input placeholder="请输入密码" v-model="form.password" show-password @keyup.enter="login"></el-input>
-        <el-button type="primary" @click="login">登陆</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
         <!-- <el-button type="primary" @click="test">测试</el-button> -->
       </div>
   </div>
