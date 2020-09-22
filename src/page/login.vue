@@ -19,6 +19,11 @@ export default {
             form: {
                 username: '',
                 password: '',
+            },
+            context:{
+                user_id:'',
+                user_name:'',
+                user_role:''
             }
         }
     },
@@ -36,8 +41,12 @@ export default {
             },
             "type" : "POST",
             "success": function(data) {
+               _this.context.user_id=data.data.user_id;
+                _this.context.user_name=data.data.user_name;
+                _this.context.user_role=data.data.user_role;
                sessionStorage.setItem("session", data.data)
                sessionStorage.setItem('sessionId',data.data.sessionId)
+               sessionStorage.setItem("context",JSON.stringify(_this.context));
                _this.$router.push({name: 'index'});
             },
             "error": function(data) {

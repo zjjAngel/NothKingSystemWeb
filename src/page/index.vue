@@ -43,8 +43,10 @@
 </template>
 
 <script>
+import { MessageBox } from "element-ui";
 import jbfMenu from "@/components/left_menu";
 import pageHead from "@/components/head"
+import * as api from "@/utils/api";
 export default {
   name: "index",
   data() {
@@ -134,7 +136,44 @@ export default {
           this.items[index].active = true;
         }
       });
-    }
+    },
+
+     putData: function(dataResult){
+        let  _this=this;
+         // for (let i = 0;  ; i++) {
+         //     if (dataResult[i].nextIdsMenu.nextIdsMenu.length==0
+         //         &&dataResult[i].nextIdsMenu.nextIdsMenu[0].menu_id==""){
+         //         break;
+         //     }
+         //     dataResult=dataResult[i].nextIdsMenu;
+         //     _this.putData(dataResult[i].menu_id,dataResult[i].menu_name
+         //         ,dataResult[i].menu_level,dataResult[i].nextIdsMenu );
+         // }
+     }
+  },
+  mounted() {
+      let _this=this;
+      debugger;
+      console.log(JSON.parse(sessionStorage.getItem("context")));
+      let context=  JSON.parse(sessionStorage.getItem("context"));
+      const queryData = {
+          role_Id: context.user_role
+      };
+      this.$ajax({
+          url: api.queryMenuByRoleId,
+          data: queryData,
+          type: "GET",
+          success: function (data) {
+              console.log(data);
+              let dataResult = data.data;
+              _this.putData(dataResult);
+
+          },
+          error: function (data) {
+              console.log(data);
+          },
+      });
+
   }
 };
 </script>

@@ -58,3 +58,8 @@ export const requireSelectRequireByCustName = "http://188.131.134.15:8088/requir
 export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu";
 export const updateMenuMngerInfo ="http://188.131.134.15:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
 // export const queryMenu = "http://127.0.0.1:8089/api/NothKingSystem/menu/queryMenu"
+
+/**
+ * 登录角色菜单管理
+ */
+export  const queryMenuByRoleId="http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId"
