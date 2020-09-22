@@ -27,14 +27,14 @@ export const requireAddRequire = "http://188.131.134.15:8088/require/addRequire"
 
 export const requireUpdateRequire = "http://188.131.134.15:8088/require/updateRequire" // 更新操作
 
-export const requireSelectRequire = "http://188.131.134.15:8088/require/selectRequire" // 查询数据操作
+export const requireSelectRequire = "http://188.131.134.15:8088/api/NothKingSystem/require/selectRequire" // 查询数据操作
 
 export const requireDeleteRequire = "http://188.131.134.15:8088/require/deleteRequire" // 删除需求客户信息
 
 export const requireSelectRequireCust = "http://188.131.134.15:8088/require/selectRequireCust" // 查询需求客户信息(头部枚举值)
 
 export const requireSelectRequireByCustName = "http://188.131.134.15:8088/require/selectRequireByCustName" // 根据客户查询需求项目信息(头部枚举值)
-
+export const RequireSearch = "http://192.168.0.106:8088/require/selectRequire" //需求管理的搜索
 
 
 /*

@@ -9,24 +9,25 @@
           <template>
             <span>需求客户</span>
             <el-select style="width:10vw" v-model="requireCust" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in requireCustOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+               
+              <el-option 
+                v-for="item in requireCustOptions" 
+                :key="item.requireCust"
+                :label="item.requireCust"
+                :value="item.requireCust"
+              @click.native="changeInquire(item.requireCust)"></el-option>
             </el-select>
           </template>
         </el-col>
         <el-col :span="5">
           <template>
             <span>项目</span>
-            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择" id="resIn">
               <el-option
-                v-for="item in projectOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in project"
+                :key="item.option"
+                :label="item.requireCust"
+                :value="item.option"
               ></el-option>
             </el-select>
           </template>
@@ -63,7 +64,11 @@
           </template>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" size="mini">搜索</el-button>
+          
+
+          <el-button type="primary" @click="queryData" >搜索</el-button>
+          
+
         </el-col>
       </el-row>
       <el-row>
@@ -74,9 +79,9 @@
         </el-row>
         <el-row>
           <template>
-            <el-table :data="tableData.tableDataItem" style="width: 100%">
-              <el-table-column prop="number" align="center" label="编号"></el-table-column>
-              <el-table-column prop="requireCust" align="center" label="需求客户"></el-table-column>
+            <el-table :data="tableData" style="width: 100%">
+              <el-table-column prop="numNo" align="center" label="编号"></el-table-column>
+              <!-- <el-table-column prop="requireCust" align="" label="需求客户"></el-table-column> -->
               <el-table-column prop="project" align="center" label="项目"></el-table-column>
               <el-table-column prop="position" align="center" label="岗位"></el-table-column>
               <el-table-column prop="requreNum" align="center" label="需求人数"></el-table-column>
@@ -94,6 +99,25 @@
         </el-row>
       </el-row>
     </div>
+ <el-row>
+        <div class="pageStyle">
+          <div class="pageChange">
+            每页显示条数
+            <el-input-number
+              v-model="pageSize"
+              controls-position="right"
+              @change="handleChange"
+              :min="1"
+              :max="15"
+              size="small"
+            ></el-input-number>
+          </div>
+          <div>
+            <el-pagination background layout="pager" :total="total"></el-pagination>
+          </div>
+        </div>
+      </el-row>
+    
     <clientFormbox
       :formbox="formbox"
       :formboxmsg="formboxmsg"
@@ -101,6 +125,9 @@
       @submit="submitbox"
     ></clientFormbox>
   </div>
+ 
+  
+      
 </template>
       
 
@@ -113,28 +140,11 @@ export default {
   data() {
     return {
       requireCustOptions: [],
-      projectOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
+      projectlist:[],
+      projectOptions: [],
+       pageNum: 1,
+       pageSize: 10,
+       total:0,
       positionOptions: [
         {
           value: "UI设计师",
@@ -176,9 +186,7 @@ export default {
       project: "",
       position: "",
       priority: "",
-      tableData: {
-        tableDataItem: []
-      },
+      tableData:[],
       formbox: 0,
       formboxmsg: {}
     };
@@ -186,7 +194,59 @@ export default {
   components: {
     clientFormbox
   },
-  methods: {
+
+mounted(){
+ let _this = this;
+      this.$ajax({
+      url:api.RequireSearch,
+      data:{"option":"01"},//查询需求客户
+      type:"POST",
+      success:function(data){
+        _this.requireCustOptions=data.data;
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+
+    this.$ajax({
+
+      url:api.RequireSearch,
+      data:{"option":"03"},
+      type:"POST",
+      success:function(data){
+        debugger;
+        console.log.data;
+         _this.tableData= data.data;//here
+        
+      },
+      error:function(data){
+        console.log(data);
+      },
+    })
+
+},
+
+  methods:{
+    changeInquire(obj){
+      
+      let _this = this;
+      this.$ajax({
+      url:api.RequireSearch,
+      data:{"option":"02"
+      ,"requireCust":obj
+      },//查询需求客户
+      type:"POST",
+      success:function(data){
+        _this.requireCustOptions=data.data;//
+        document.getElementById("resIn").value=data.data[0].project;
+        
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+    },
     handleClick(row, action) {
       let _this = this
       if (action == "less") {
@@ -226,6 +286,32 @@ export default {
         this.formbox = 1;
         this.formboxmsg = row;
       }
+    },
+
+ queryData() {
+      let _this = this;
+      const queryData = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      this.$ajax({
+        url: api.RequireSearch,
+        data: queryData,
+        type: "POST",
+        success: function (data) {
+          console.log(data);
+          _this.tableData = data.data.list;
+          _this.total = data.data.total;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+
+     handleChange(e) {
+      console.log("分页调整", e);
+      this.pageSize = e;
     },
     closebox(e) {
       this.formbox = 0;
@@ -282,24 +368,24 @@ export default {
       this.formbox = 2;
     }
   },
-  beforeMount: function() {
-    let _this = this;
-    // 
-    this.$ajax({
-      url: api.requireSelectRequireCust,
-      data: {},
-      type: "POST",
-      success: function(data) {
-        console.log(data)
-        _this.requireCustOptions = data.data
-      },
-      error: function(data) {
-        console.log(data)
-        if (data == 500) {
-        }
-      }
-    });
-  }
+  // beforeMount: function() {
+    // let _this = this;
+    // // 
+    // this.$ajax({
+    //   url: api.requireSelectRequireCust,
+    //   data: {},
+    //   type: "POST",
+    //   success: function(data) {
+    //     console.log(data)
+    //     _this.requireCustOptions = data.data
+    //   },
+    //   error: function(data) {
+    //     console.log(data)
+    //     if (data == 500) {
+    //     }
+    //   }
+    // });
+  // }
 };
 </script>
 
@@ -343,5 +429,15 @@ export default {
   margin-bottom: 10px;
   margin-right: 50px;
   text-align: right;
+}
+.pageChange {
+  display: flex;
+  align-items: center;
+}
+.pageStyle {
+  height: 35px;
+  margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
