@@ -1,7 +1,7 @@
 <template>
-  <div class="reqbox" v-show="reqbox">//formbox change to reqbox
+  <div class="reqbox" v-show="reqbox">
     <div class="req-box">
-      <div class="re-row">//flex change to re  
+      <div class="re-row">
         <div class="re-row">
           <label for="project">项目</label>
           <input type="text" id="project" v-model="reqboxmsg.project" />
@@ -17,11 +17,11 @@
       </div>
       <div class="re-row">
         <label for="requestion">要求</label>
-        <textarea id="requestion" v-model="reqboxmsg.requestion"></textarea>
+        <input type="text" id="requestion" v-model="reqboxmsg.requestion"></textarea>
       </div>
       <div class="re-row">
         <label for="priority">优先级</label>
-        <input type="text" id="priority" v-model="reqoxmsg.priority" />
+        <input type="text" id="priority" v-model="reqboxmsg.priority" />
       </div>
     
 
@@ -38,7 +38,7 @@
 export default {
     name: 'inquireFormbox',
     props: {
-        formbox: {
+        reqbox: {
             type: Number, // 0-关闭，1-编辑, 2-增加 
             default: false
         },
@@ -53,8 +53,8 @@ export default {
         },
         submit: function() {
             let msg = {
-                'formbox': this.reqbox,
-                'formboxmsg': this.reqboxmsg
+                'reqbox': this.reqbox,
+                'reqboxmsg': this.reqboxmsg
             }
             this.$emit("submit", msg)
         }
@@ -63,10 +63,11 @@ export default {
 </script>
 
 <style scoped>
-.formbox {
+.reqbox {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  background-color: #ffffff;
   position: fixed;
   top: 0;
   left: 0;
@@ -84,7 +85,7 @@ textarea{
    width: 490px;
    height: 60px;
 }
-.formbox-box {
+.reqbox-box {
   width: 50vw;
   height: 70vh;
   background-color: rgba(255, 255, 255, 1);
