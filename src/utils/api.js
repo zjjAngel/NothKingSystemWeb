@@ -34,7 +34,7 @@ export const requireDeleteRequire = "http://188.131.134.15:8088/require/deleteRe
 export const requireSelectRequireCust = "http://188.131.134.15:8088/require/selectRequireCust" // 查询需求客户信息(头部枚举值)
 
 export const requireSelectRequireByCustName = "http://188.131.134.15:8088/require/selectRequireByCustName" // 根据客户查询需求项目信息(头部枚举值)
-export const RequireSearch = "http://192.168.0.106:8088/require/selectRequire" //需求管理的搜索
+export const RequireSearch = "http://188.131.134.15:8088/require/selectRequire" //需求管理的搜索
 
 
 /*
@@ -49,19 +49,18 @@ export const RequireSearch = "http://192.168.0.106:8088/require/selectRequire" /
  export const editUser = "http://188.131.134.15:8088/api/NothKingSystem/SysUsrMnger/updateUsrInfo" //修改用户
  export const roleNameList = "http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryRoleMngMenuInfo"//角色管理名称下拉框
 
- export const urlfortest = "http://www.baidu.com"//下回·删掉
 
 
 /**
  * 菜单管理
  * @type {string}
  */
-export const queryMenu = "http://192.168.0.108:8088/api/NothKingSystem/menu/queryMenu";
-export const updateMenuMngerInfo ="http://192.168.0.108:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
-// export const queryMenu = "http://127.0.0.1:8089/api/NothKingSystem/menu/queryMenu"
+export const queryMenu = "http://188.131.134.15:8088/api/NothKingSystem/menu/queryMenu";
+export const updateMenuMngerInfo ="http://188.131.134.15:8088/api/NothKingSystem/menu/updateMenuMngerInfo";
+
 
 /**
  * 登录角色菜单管理
  */
 export  const queryMenuByRoleId="http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByRoleId";
-export  const  queryMenuByNextLevel="http://127.0.0.1:8081/api/NothKingSystem/roleMngMenu/queryMenuByNextLevel";
+export  const  queryMenuByNextLevel="http://188.131.134.15:8088/api/NothKingSystem/roleMngMenu/queryMenuByNextLevel";
