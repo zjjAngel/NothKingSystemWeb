@@ -190,12 +190,12 @@ export default {
   },
   mounted() {
       let _this=this;
-      
       console.log(JSON.parse(sessionStorage.getItem("context")));
       let context=  JSON.parse(sessionStorage.getItem("context"));
       const queryData = {
           role_Id: context.user_role
       };
+     _this.username=context.user_name;
       this.$ajax({
           url: api.queryMenuByRoleId,
           data: queryData,
