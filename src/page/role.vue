@@ -136,13 +136,13 @@ this.$ajax({
       },
     });
 
-    //这是我写的接口
+    
     this.$ajax({
-      url:api.roleselect,
+      url:api.roleNameList,
       data:{},
       type:"GET",
       success:function(data){
-        _this.roleselect = data;//错就在这里
+        _this.roleselect = data;
       },
       error: function (data){
         console.log(data);
@@ -214,12 +214,12 @@ this.$ajax({
     fillData(value){
         console.log("select 中对应的value" +value);
         // console.log("select 中对应的label" +label);
-        debugger;
+        
         this.inputQuery={"roleId":value};
     },
     queryData(){
       let _this = this;
-      debugger;
+      
       console.log(document.getElementById("role1").value);
       console.log(_this.roleNameValue);
 
