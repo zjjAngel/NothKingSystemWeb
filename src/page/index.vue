@@ -153,7 +153,7 @@ export default {
   },
   mounted() {
       let _this=this;
-      debugger;
+      
       console.log(JSON.parse(sessionStorage.getItem("context")));
       let context=  JSON.parse(sessionStorage.getItem("context"));
       const queryData = {

@@ -292,7 +292,7 @@ mounted(){
 
         _this.reqboxmsg.project=row.project;
         _this.reqboxmsg.post=row.post;//要改
-        _this.reqboxmsg.renum = row.renum;
+        _this.reqboxmsg.renum = row;//要改
         _this.reqboxmsg.requestion=row.requestion;
         _this.reqboxmsg.priority=row.priority;
 
