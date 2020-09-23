@@ -9,9 +9,9 @@
           <template>
             <span>需求客户</span>
             <el-select style="width:10vw" v-model="requireCust" size="mini" placeholder="请选择">
-               
-              <el-option 
-                v-for="item in requireCustOptions" 
+
+              <el-option
+                v-for="item in requireCustOptions"
                 :key="item.requireCust"
                 :label="item.requireCust"
                 :value="item.requireCust"
@@ -64,10 +64,10 @@
           </template>
         </el-col>
         <el-col :span="4">
-          
+
 
           <el-button type="primary" @click="queryData" >搜索</el-button>
-          
+
 
         </el-col>
       </el-row>
@@ -117,20 +117,20 @@
           </div>
         </div>
       </el-row>
-    
+
     <inquireEditAdd
       :reqbox="reqbox"
       :reqboxmsg="reqboxmsg"
-      
+
       @close="closebox"
       @submit="submitbox"
     ></inquireEditAdd>
   </div>
- 
-  
-      
+
+
+
 </template>
-      
+
 
 <script>
 import { MessageBox } from "element-ui";
@@ -182,7 +182,7 @@ export default {
           label: "低"
         }
       ],
-      
+
       requireCust: "",
       project: "",
       position: "",
@@ -198,12 +198,13 @@ export default {
 
 mounted(){
  let _this = this;
+ debugger;
       this.$ajax({
       url:api.RequireSearch,
       data:{"option":"01"},//查询需求客户
       type:"POST",
       success:function(data){
-        
+
         _this.requireCustOptions=data.data;
       },
       error: function (data){
@@ -217,10 +218,10 @@ mounted(){
       data:{"option":"03"},
       type:"POST",
       success:function(data){
-        
+
         console.log.data;
          _this.tableData= data.data;
-        
+
       },
       error:function(data){
         console.log(data);
@@ -231,7 +232,7 @@ mounted(){
 
   methods:{
     changeInquire(obj){
-      
+
       let _this = this;
       this.$ajax({
       url:api.RequireSearch,
@@ -242,7 +243,7 @@ mounted(){
       success:function(data){
         _this.requireCustOptions=data.data;
         document.getElementById("resIn").value=data.data[0].project;
-        
+
       },
       error: function (data){
         console.log(data);
@@ -382,7 +383,7 @@ mounted(){
   },
   // beforeMount: function() {
     // let _this = this;
-    // // 
+    // //
     // this.$ajax({
     //   url: api.requireSelectRequireCust,
     //   data: {},
