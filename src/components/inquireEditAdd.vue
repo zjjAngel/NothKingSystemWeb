@@ -3,11 +3,12 @@
     <div class="req-box">
       <div class="re-row">
         <div class="re-row">
+          
           <label for="project">项目</label>
           <input type="text" id="project" v-model="reqboxmsg.project" />
         </div>
         <div class="re-row">
-          <label for="post">岗位</label>
+          <label >岗位</label>
           <input type="text" id="post" v-model="reqboxmsg.post" />
         </div>
       </div>
@@ -63,19 +64,19 @@ export default {
 </script>
 
 <style scoped>
-.reqbox {
+/* .reqbox {
   width: 100vw;
   height: 100vh;
-  /* background-color: rgba(0, 0, 0, 0.3); */
-  background-color: #ffffff;
-  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: #ffffff; */
+  /* position: fixed;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-}
+  z-index: 999; */
+/* } */ 
 label {
   font-weight: bold;
   min-width: 120px;
@@ -96,6 +97,7 @@ textarea{
   align-items: flex-start;
   justify-content: space-around;
 }
+
 .flex-row {
   display: flex;
   flex-flow: row nowrap;

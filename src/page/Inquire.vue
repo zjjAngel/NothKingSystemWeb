@@ -134,8 +134,8 @@
 
 <script>
 import { MessageBox } from "element-ui";
-import * as api from "@/utils/api";
 import inquireEditAdd from "@/components/inquireEditAdd";
+import * as api from "@/utils/api";
 export default {
   name: "Inquire",
   data() {
@@ -183,14 +183,28 @@ export default {
         }
       ],
       
+      
       requireCust: "",
       project: "",
       position: "",
       priority: "",
       tableData:[],
       reqbox: 0,
-      reqboxmsg: {}
-    };
+      reqboxmsg: {},
+    //    inputAjax:{ //要改
+
+    //      "project":"",
+    //      "post":"",
+    //      "reqnum":"",
+    //      "status":"",
+    //      "pageSize":"",
+    //      "pageNum":""
+
+    //    },
+        // formboxmsg:{
+        //   status:""
+        // }
+     };
   },
   components: {
     inquireEditAdd,
@@ -198,12 +212,13 @@ export default {
 
 mounted(){
  let _this = this;
+ debugger;
       this.$ajax({
       url:api.RequireSearch,
       data:{"option":"01"},//查询需求客户
       type:"POST",
       success:function(data){
-        
+        debugger;
         _this.requireCustOptions=data.data;
       },
       error: function (data){
@@ -289,13 +304,17 @@ mounted(){
       } else {
         this.reqbox = 1;
         //this.reqboxmsg = row;
-
         _this.reqboxmsg.project=row.project;
-        _this.reqboxmsg.post=row.post;//要改
-        _this.reqboxmsg.renum = row;//要改
-        _this.reqboxmsg.requestion=row.requestion;
+        _this.reqboxmsg.post=row.position;
+        _this.reqboxmsg.renum = row.requreNum;//要改
+        _this.reqboxmsg.requestion=row.request;//要改
         _this.reqboxmsg.priority=row.priority;
-
+        _this.reqboxmsg.numNo=row.numNo;
+         if (row.status='1'){
+              _this.formboxmsg.status= "在线";
+          }else {
+              _this.formboxmsg.status= "下线";
+          }
 
       }
     },
@@ -306,6 +325,9 @@ mounted(){
         pageNum: this.pageNum,
         pageSize: this.pageSize,
       };
+
+      //  queryData=_this.inputAjax;
+
       this.$ajax({
         url: api.RequireSearch,
         data: queryData,
@@ -332,14 +354,23 @@ mounted(){
         message: "已取消"
       });
     },
+
+    
+
     submitbox(e) {
       console.log(e);
       let _this = this;
       if (e.reqbox == 1) {
+       let input2=  e.reqboxmsg;
+      //  input2.numNo=1111;
+       
+       input2.requreNum=input2.renum;
+       delete input2.renum;
         // 编辑
         this.$ajax({
           url: api.requireUpdateRequire,
-          data: e.reqboxmsg,
+          data:input2,
+          
           type: "POST",
           success: function(data) {
             _this.reqbox = 0;

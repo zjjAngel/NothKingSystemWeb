@@ -298,7 +298,7 @@ this.$ajax({
       if (e.formbox == 1) {
         // 编辑
         this.$ajax({
-          url: api.requireUpdateRequire,
+          url: api.ROleEdit,//注意要改
           data: e.formboxmsg,
           type: "POST",
           success: function (data) {

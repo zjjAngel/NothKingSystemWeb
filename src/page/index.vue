@@ -190,12 +190,12 @@ export default {
   },
   mounted() {
       let _this=this;
-      
       console.log(JSON.parse(sessionStorage.getItem("context")));
       let context=  JSON.parse(sessionStorage.getItem("context"));
       const queryData = {
           role_Id: context.user_role
       };
+     _this.username=context.user_name;
       this.$ajax({
           url: api.queryMenuByRoleId,
           data: queryData,
@@ -206,7 +206,7 @@ export default {
               //渲染一级菜单
               let datare;
               for (let i = 0; i <dataResult.length ; i++) {
-                  debugger;
+                  
                   _this.menus.name=dataResult[i].menu_name;
                   _this.menus.id=dataResult[i].menu_id;
                   _this.menus.patch= "/index/systemManage";
@@ -234,7 +234,7 @@ export default {
               data:queryData,
               type:"GET",
               success:function (data) {
-                  debugger;
+                  
                   // let findNextResult;
                   var myArray=new Array()
                   for (let i = 0; i <data.data.length ; i++) {
