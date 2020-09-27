@@ -191,19 +191,19 @@ export default {
       tableData:[],
       reqbox: 0,
       reqboxmsg: {},
-    //    inputAjax:{ //要改
+       inputAjax:{ 
 
-    //      "project":"",
-    //      "post":"",
-    //      "reqnum":"",
-    //      "status":"",
-    //      "pageSize":"",
-    //      "pageNum":""
+         "project":"",
+         "post":"",
+         "reqnum":"",
+         "status":"",
+         "pageSize":"",
+         "pageNum":""
 
-    //    },
-        // formboxmsg:{
-        //   status:""
-        // }
+       },
+        formboxmsg:{
+          status:""
+        }
      };
   },
   components: {
@@ -212,13 +212,11 @@ export default {
 
 mounted(){
  let _this = this;
- debugger;
       this.$ajax({
       url:api.RequireSearch,
       data:{"option":"01"},//查询需求客户
       type:"POST",
       success:function(data){
-        debugger;
         _this.requireCustOptions=data.data;
       },
       error: function (data){
@@ -306,8 +304,8 @@ mounted(){
         //this.reqboxmsg = row;
         _this.reqboxmsg.project=row.project;
         _this.reqboxmsg.post=row.position;
-        _this.reqboxmsg.renum = row.requreNum;//要改
-        _this.reqboxmsg.requestion=row.request;//要改
+        _this.reqboxmsg.renum = row.requreNum;
+        _this.reqboxmsg.requestion=row.request;
         _this.reqboxmsg.priority=row.priority;
         _this.reqboxmsg.numNo=row.numNo;
          if (row.status='1'){

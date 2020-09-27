@@ -38,9 +38,9 @@
         <el-row>
           <template>
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="user_role" align="center" label="角色ID"></el-table-column>
-              <el-table-column prop="role_name" align="center" label="角色名称"></el-table-column>
-              <el-table-column prop="back_up" align="center" label="备注"></el-table-column>
+              <el-table-column prop="role_ID" align="center" label="角色ID"></el-table-column>
+              <el-table-column prop="role_NAME" align="center" label="角色名称"></el-table-column>
+              <el-table-column prop="back_UP" align="center" label="备注"></el-table-column>
               <el-table-column fixed="right" align="center" label="操作">
                 <template slot-scope="scope">
                   <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
@@ -64,20 +64,29 @@
               size="small"
             ></el-input-number>
           </div>
-          <div>
+             <div>
+            <el-pagination
+              background
+              layout="pager"
+              :page-size="pageSize"
+              @current-change="pageQuery"
+              :total="total"
+            ></el-pagination>
+          </div>
+          <!-- <div>
             <el-pagination background layout="pager" :total="total"></el-pagination>
           </div>
-        </div>
+        </div> -->
       </el-row>
     </div>
-    <userEditAdd
+    <roleEditAdd
       :formbox="formbox"
       :formboxmsg="formboxmsg"
       :options="optionsArray"
       @close="closebox"
       @submit="submitbox"
       @resetPas="resetPas"
-    ></userEditAdd>
+    ></roleEditAdd>
   </div>
 </template>
 
@@ -85,7 +94,8 @@
 <script>
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
-import userEditAdd from "@/components/userEditAdd";
+import roleEditAdd from "@/components/roleEditAdd";
+// import { delete } from 'vue/types/umd';
 export default {
   name: "role",
   data() {
@@ -115,11 +125,26 @@ export default {
       formboxmsg: {},
       roleNameValue:'',
       roleNameList:[],
-      inputQuery:{}
+      inputQuery:{},
+
+       inputAjax:{ 
+         "user_role":"",
+         "role_name":"",
+         "back_up":"",
+         "pageSize":"",
+         "pageNum":""
+
+       },
+       inputAjax1:{
+         "ROLE_NAME":"",
+         "BACK_UP":"",
+         "FEIGN_IDS":""
+       }
+
     };
   },
   components: {
-    userEditAdd,
+    roleEditAdd,
   },
   mounted() {
     let _this = this;
@@ -130,6 +155,7 @@ this.$ajax({
       success: function (data) {
         // console.log("接口返回值",data)
         _this.roleNameList = data.data.list;
+        _this.roleselect = data;
       },
       error: function (data) {
         console.log(data);
@@ -137,24 +163,24 @@ this.$ajax({
     });
 
     
-    this.$ajax({
-      url:api.roleNameList,
-      data:{},
-      type:"GET",
-      success:function(data){
-        _this.roleselect = data;
-      },
-      error: function (data){
-        console.log(data);
-      },
-    });
+    // this.$ajax({
+    //   url:api.roleNameList,
+    //   data:{},
+    //   type:"GET",
+    //   success:function(data){
+    //     _this.roleselect = data;
+    //   },
+    //   error: function (data){
+    //     console.log(data);
+    //   },
+    // });
 
       const queryData = {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
       };
       this.$ajax({
-          url: api.queryUser,
+          url: api.roleNameList,
           data: queryData,
           type: "GET",
           success: function (data) {
@@ -172,6 +198,7 @@ this.$ajax({
 
 
     handleClick(row, action) {
+      
       let _this = this;
       if (action == "less") {
         this.$confirm("此操作将永久删除该信息, 是否继续?", "提示", {
@@ -181,11 +208,11 @@ this.$ajax({
         })
           .then(() => {
             this.$ajax({
-              url: api.requireDeleteRequire,
+              url: api.roleDelete,
               data: {
-                custno: row.number,
+                role_Id: row.role_ID,
               },
-              type: "POST",
+              type: "GET",
               success: function (data) {
                 _this.formbox = 0;
                 console.log(data);
@@ -193,6 +220,8 @@ this.$ajax({
                   type: "success",
                   message: "删除成功!",
                 });
+
+              _this.queryData();
               },
               error: function (data) {
                 if (data == 500) {
@@ -209,6 +238,13 @@ this.$ajax({
       } else {
         this.formbox = 1;
         this.formboxmsg = row;
+
+        // _this.formboxmsg.user_role = row.user_role;
+        _this.formboxmsg.ROLE_NAME = row.role_NAME;
+        _this.formboxmsg.BACK_UP = row.back_UP;
+        _this.formboxmsg.ROLE_ID = row.role_ID;
+       
+
       }
     },
     fillData(value){
@@ -229,7 +265,7 @@ this.$ajax({
       "roleId": this.inputQuery.roleId
       };
       this.$ajax({
-        url: api.queryUser,
+        url: api.roleNameList,
         data: queryData,
         type: "GET",
         success: function (data) {
@@ -295,10 +331,12 @@ this.$ajax({
     submitbox(e) {
       console.log(e);
       let _this = this;
+      delete e.formboxmsg.user_role;
+      
       if (e.formbox == 1) {
         // 编辑
         this.$ajax({
-          url: api.ROleEdit,//注意要改
+          url: api.ROleEdit,
           data: e.formboxmsg,
           type: "POST",
           success: function (data) {
@@ -310,19 +348,29 @@ this.$ajax({
           },
         });
       } else if (e.formbox == 2) {
+      
+          e.formboxmsg.BACK_UP=e.formboxmsg.BACK_UP;
+          e.formboxmsg.ROLE_NAME=e.formboxmsg.ROLE_NAME;
+          delete e.formboxmsg.back_up;
+          delete e.formboxmsg.role_name;
         // 增加
         this.$ajax({
-          url: api.addUser,
+          
+          url:api.roleAdd,
           data: e.formboxmsg,
           type: "POST",
           success: function (data) {
             console.log(data);
             //_this.tableData.tableDataItem.push(data.data);
             _this.formbox = 0;
+
             _this.$message({
               type: "success",
-              message: "新增成功!",
+              message: "新增成功!若想角色生效，请分配用户！",
             });
+           
+          _this.queryData();
+            
           },
           error: function (data) {
             if (data !== 500) {
@@ -337,7 +385,11 @@ this.$ajax({
       }
     },
     addcust() {
+      let _this=this;
       this.formbox = 2;
+      
+      _this.formboxmsg.ROLE_NAME = "";
+      _this.formboxmsg.BACK_UP = "";
     },
   },
 };

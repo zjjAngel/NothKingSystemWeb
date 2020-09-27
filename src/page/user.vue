@@ -276,6 +276,9 @@ export default {
         },
       });
     },
+
+    
+
     pageQuery(val) {
       let _this = this;
       _this.pageNum = val;

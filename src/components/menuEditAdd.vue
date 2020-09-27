@@ -8,14 +8,27 @@
       <div class="flex-row">
         <div class="flex-row">
           <label >父级菜单</label>
-          <el-select v-model="formboxmsg.transRole" disabled="disabled" >
+          <!-- <el-select v-model="formboxmsg.transRole" disabled="disabled" > -->
+             <select v-model="formboxmsg.transRole"  name="fatherMn">
+          <option  >请输入</option>
+          </select>
+         <!-- <el-select v-model="formboxmsg.transRole" size="mini" placeholder="请选择" name="fatherMn">
+             @click.native="checkFather(item.menu_id,item.menu_level_parent)" 
+              <el-option
+                v-for="item in options"
+                :key="item.menu_id"
+                :label="item.menu_name"
+                :value="item.menu_id"
+               ></el-option>
+            </el-select> -->
+            <!-- <el-select v-model="formboxmsg.transRole"  >
             <el-option
               v-for="item in options"
               :key="item.menu_id"
               :label="item.menu_name"
               :value="item.menu_id"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </div>
         <div class="flex-row">
           <label for="menu_level">菜单级别</label>
@@ -32,15 +45,20 @@
       </div>
       <div class="flex-row">
         <label >状态</label>
-        <el-select v-model="formboxmsg.status" placeholder="请选择" >
-          <el-option
+        <!-- <el-select v-model="formboxmsg.status" placeholder="请选择" > -->
+          
+          <!-- <el-option
             v-for="item in options"
             :key="item.status"
             :label="item.status"
             :value="item.status"
-            v-if="item.status === '1'"
-          > </el-option>
-        </el-select>
+            v-if="item.status === "1"
+          > </el-option> -->
+        <!-- </el-select> -->
+        <select v-model="formboxmsg.status">
+          <option value="1" >上线</option>
+            <option value="0" >下线</option>
+        </select>
 <!--        <input type="text" id="status" v-model="formboxmsg.status"/>-->
       </div>
 
@@ -61,7 +79,8 @@ export default {
       default: false,
     },
     formboxmsg: {
-      type: Object,
+      type: Object
+    
     },
       options:{
       }
@@ -72,7 +91,7 @@ export default {
       this.$emit("close", this.formbox);
     },
     submit: function () {
-
+       
         let msg = {
             formbox: this.formbox,
             formboxmsg: this.formboxmsg,

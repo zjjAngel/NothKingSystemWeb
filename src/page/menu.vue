@@ -54,7 +54,7 @@
             <span @click="addcust">+添加</span>
           </el-col>
         </el-row>
-        <el-row>
+      <el-row>
           <template>
             <el-table :data="tableData" style="width: 100%">
               <el-table-column prop="menu_id" align="center" label="菜单ID"></el-table-column>
@@ -89,9 +89,16 @@
               size="small"
             ></el-input-number>
           </div>
-          <div>
-            <el-pagination background layout="pager" :total="total"></el-pagination>
+           <div>
+            <el-pagination
+              background
+              layout="pager"
+              :page-size="pageSize"
+              @current-change="pageQuery"
+              :total="total"
+            ></el-pagination>
           </div>
+         
         </div>
       </el-row>
     </div>
@@ -111,6 +118,9 @@
 import { MessageBox } from "element-ui";
 import * as api from "@/utils/api";
 import menuEditAdd from "@/components/menuEditAdd";
+
+
+
 export default {
   name: "menuM",
   data() {
@@ -171,6 +181,7 @@ export default {
               console.log(data);
           },
       });
+  
 
     const queryMenu2 = {};
     this.$ajax({
@@ -200,18 +211,24 @@ export default {
         })
           .then(() => {
             this.$ajax({
-              url: api.requireDeleteRequire,
+              url: api. Menudelet,//这个接口错的
               data: {
-                custno: row.number,
-              },
-              type: "POST",
+                // custno: row.number,//要改
+                  menu_id : row.menu_id,//要改
+                                
+              },  
+              type:"DELETE",
+
               success: function (data) {
+                 debugger;
                 _this.formbox = 0;
+                // _this.formboxmsg.menuName = rowmenuName;//要改
                 console.log(data);
                 _this.$message({
                   type: "success",
                   message: "删除成功!",
                 });
+                _this.queryData();
               },
               error: function (data) {
                 if (data == 500) {
@@ -227,32 +244,50 @@ export default {
             });
           });
       } else {
+        debugger;
+         _this.formboxmsg.row=row;
         this.formbox = 1;
         // this.formboxmsg = row;
           _this.formboxmsg.mobileno="";
           _this.formboxmsg.mobileno=row.menu_name;
-          _this.formboxmsg.transRole=row;
+          _this.formboxmsg.transRole=row.menu_level_parent;
           _this.formboxmsg.options=row;
           _this.formboxmsg.menu_level=row.menu_level;
           _this.formboxmsg.path=row.path;
           _this.formboxmsg.back_up=row.back_up;
-          
-          // _this.formboxmsg.status=row.status=;
+           _this.optionsArray.list=_this.requireCustOptions;
+      var  context="";
+      for (let index = 0; index < _this.requireCustOptions.length; index++) {
+      //  _this.formboxmsg.options[index] = _this.requireCustOptions[index];
+          //  document.getElementsByName("fatherMn")[index].textContent= _this.requireCustOptions[index].menu_name;
+          //  document.getElementsByName("fatherMn")[index]= _this.requireCustOptions[index];
+          // <el-option
+        context+=   "<option value="+_this.requireCustOptions[index].menu_id+">"+_this.requireCustOptions[index].menu_name+"</option>  "+"\n";
+        }
+        document.getElementsByName("fatherMn")[0].innerHTML =context;
+
+        e.formboxmsg.menuName=e.formboxmsg.mobileno; delete e.formboxmsg.mobileno;
+        
+     
+     // _this.formboxmsg.status=row.status=;
           if (row.status='1'){
               _this.formboxmsg.status= "在线";
-          }else {
+          }else if(row.status='0'){
               _this.formboxmsg.status= "下线";
+          }else {
+              return '异常状态'
           }
 
       }
+      
     },
     queryData() {
       let _this = this;
-      let queryData = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-      };
-      queryData=_this.inputAjax;
+      // const queryData = {
+      //   pageNum: this.pageNum,
+      //   pageSize: this.pageSize,
+      // };
+      // queryData=_this.inputAjax;
       this.$ajax({
         url: api.queryMenu,
         data: queryData,
@@ -267,16 +302,64 @@ export default {
         },
       });
     },
-    handleChange(e) {
+    handleChange(e) {//试试
       console.log("分页调整", e);
       this.pageSize = e;
+      let _this = this;
+       const queryData = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      this.$ajax({
+        url: api.queryMenu,
+        data: queryData,
+        type: "GET",
+        success: function (data) {
+          _this.tableData = data.data.list;
+          _this.total = data.data.total;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
     },
+
+
+      pageQuery(val) {
+      let _this = this;
+      _this.pageNum = val;
+      const queryData = {
+        pageNum: val,
+        pageSize: _this.pageSize,
+        menu_id: this.requireCust,//要改
+        roleId: this.project,//要改
+      };
+      this.$ajax({
+        url: api.queryMenu,
+        data: queryData,
+        type: "GET",
+        success: function (data) {
+          _this.tableData = data.data.list;
+          _this.total = data.data.total;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+
+    
+
+
     closebox(e) {
       this.formbox = 0;
       this.$message({
         type: "info",
         message: "已取消",
       });
+
+    
+
     },
 
     resetPas() {
@@ -322,13 +405,37 @@ export default {
       let _this = this;
         
       if (e.formbox == 1) {
+        debugger;
         // 编辑
+        e.formboxmsg.menuName = e.formboxmsg.row.menu_name;
+        e.formboxmsg.menuId = e.formboxmsg.row.menu_id;
+        e.formboxmsg.menu_level_parent= e.formboxmsg.row.menu_level_parent;
+        e.formboxmsg.status = e.formboxmsg.row.status;
+        // e.formboxmsg.back_up = e.formboxmsg.row.back_up;
+        delete e.formboxmsg.transRole;
+        delete e.formboxmsg.options;
+        delete e.formboxmsg.mobileno;
+        delete e.menu_level;
+        delete e.formboxmsg.row;
         this.$ajax({
           url: api.updateMenuMngerInfo,
           data: e.formboxmsg,
           type: "PUT",
           success: function (data) {
             _this.formbox = 0;
+            queryData();
+             this.$ajax({
+              url: api.queryMenu,
+              data: queryData,
+              type: "GET",
+              success: function (data) {
+                _this.tableData = data.data.list;
+                _this.total = data.data.total;
+              },
+              error: function (data) {
+                console.log(data);
+              },
+            });
           },
           error: function (data) {
             if (data == 500) {
@@ -336,9 +443,24 @@ export default {
           },
         });
       } else if (e.formbox == 2) {
+
+        e.formboxmsg.BACK_UP=e.formboxmsg.back_up;
+        debugger;
+        e.formboxmsg.MENU_NAME=e.formboxmsg.mobileno;
+        e.formboxmsg.MENU_LEVEL_PARENT=e.formboxmsg.transRole;
+        e.formboxmsg.MENU_LEVEL=e.formboxmsg.menu_level;
+        e.formboxmsg.PATH=e.formboxmsg.path;
+        e.formboxmsg.STATUS="0";
+
+        delete e.formboxmsg.back_up;
+        delete e.formboxmsg.mobileno;
+        delete e.transRole;
+        delete e.menu_level;
+        delete e.formboxmsg.path;
+        delete e.status;
         // 增加
         this.$ajax({
-          url: api.addUser,
+          url: api.MenuAdd,
           data: e.formboxmsg,
           type: "POST",
           success: function (data) {
@@ -349,9 +471,11 @@ export default {
               type: "success",
               message: "新增成功!",
             });
+
+             _this.queryData();
           },
           error: function (data) {
-            if (data !== 500) {
+            if (data !== 200) {
               _this.formbox = 0;
               _this.$message({
                 type: "info",
@@ -363,8 +487,29 @@ export default {
       }
     },
     addcust() {
+      let _this=this;
       this.formbox = 2;
+      _this.formboxmsg.MENU_NAME= "";
+      _this.formboxmsg.MENU_LEVEL_PARENT = "";
+      _this.formboxmsg.MENU_LEVEL = "";
+      _this.formboxmsg.PATH = "";
+      _this.formboxmsg.BACK_UP = "";
+      _this.formboxmsg.STATUS = "";
+       _this.optionsArray.list=_this.requireCustOptions;
+      var  context="";
+      for (let index = 0; index < _this.requireCustOptions.length; index++) {
+      //  _this.formboxmsg.options[index] = _this.requireCustOptions[index];
+          //  document.getElementsByName("fatherMn")[index].textContent= _this.requireCustOptions[index].menu_name;
+          //  document.getElementsByName("fatherMn")[index]= _this.requireCustOptions[index];
+          // <el-option
+        context+=   "<option value="+_this.requireCustOptions[index].menu_id+">"+_this.requireCustOptions[index].menu_name+"</option>  "+"\n";
+        }
+        document.getElementsByName("fatherMn")[0].innerHTML =context;
+
+        
+
     },
+    
       stateFormat(row, column) {
           console.log(row.status)
           console.log('column:'+column);
