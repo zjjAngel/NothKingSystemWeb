@@ -7,21 +7,22 @@
           <template v-for="item of items">
             <jbf-menu
               class="first-menu"
-              :name="item.name"
-              :menuid="item.id"
-              :key="item.id"
+              :name="item.menu_name"
+              :menuid="item.menu_id"
+              :key="item.menu_id"
               :url="item.patch"
-              @isActive="active(item.id)"
+              @isActive="active(item.menu_id,item.nextIdsMenu)"
             >
 
               <template v-if="item.grade">
                 <div v-show="item.active">
                   <jbf-menu
-                    v-for="menu of item.menu_item"
-                    :name="menu.name"
+                    v-for="menu of item.nextIdsMenu"
+                    :name="menu.menu_name"
                     :url="menu.patch"
-                    :menuid="menu.id"
-                    :key="menu.id"
+                    :menuid="menu.menu_id"
+                    :key="menu.menu_id"
+
                   >
                   </jbf-menu>
                 </div>
@@ -55,12 +56,12 @@ export default {
       character: '超级管理员',
       items: [
         {
-          name: "需求管理",
-          id: "menuid0",
+          menu_name: "需求管理",
+          menu_id: "menuid0",
           grade: true,
           active: true,
           patch: "/index/demandManage",
-          menu_item: [
+          nextIdsMenu: [
             // {
             //   name: "需求统计",
             //   id: "menuid00",
@@ -69,8 +70,8 @@ export default {
             //   patch: "/index/demandManage/statistics"
             // },
             {
-              name: "需求查询",
-              id: "menuid01",
+              menu_name: "需求查询",
+              menu_id: "menuid01",
               grade: false,
               active: false,
               patch: "/index/demandManage/Inquire"
@@ -78,66 +79,50 @@ export default {
           ]
         },
         {
-          name: "客户管理",
-          id: "menuid1",
+          menu_name: "客户管理",
+          menu_id: "menuid1",
           grade: false,
           active: false,
           patch: "/index/clientManage"
         },
         {
-          name: "项目管理",
-          id: "menuid2",
+          menu_name: "项目管理",
+          menu_id: "menuid2",
           grade: false,
           active: false,
           patch: "/index/projectManage"
         },
         {
-          name: "系统管理",
-          id: "menuid3",
+          menu_name: "系统管理",
+          menu_id: "menuid3",
           grade: true,
           active: false,
           patch: "/index/systemManage",
-          menu_item: [
+          nextIdsMenu: [
             {
-              name: "用户管理",
-              id: "menuid30",
+                menu_name: "用户管理",
+                menu_id: "menuid30",
               grade: false,
               active: false,
               patch: "/index/systemManage/user"
             },
             {
-              name: "角色管理",
-              id: "menuid31",
+              menu_name: "角色管理",
+              menu_id: "menuid31",
               grade: false,
               active: false,
               patch: "/index/systemManage/role"
             },
             {
-              name: "菜单管理",
-              id: "menuid32",
+                menu_name: "菜单管理",
+                menu_id: "menuid32",
               grade: false,
               active: false,
               patch: "/index/systemManage/menu"
             }
           ]
         }
-      ],
-        menus:{
-            name: "",
-            id: "",
-            grade: false,
-            active: false,
-            patch: "",
-            menu_item:[]
-        },
-        tmp:{
-            name: "",
-            id: "",
-            grade: false,
-            active: false,
-            patch: "",
-            menu_item:[]
-        }
+      ]
     };
   },
   components: {
@@ -145,48 +130,27 @@ export default {
     pageHead
   },
   methods: {
-    active: function(id) {
-      this.items.forEach((e, index) => {
-        this.items[index].active = false;
-        if (e.id == id) {
-          this.items[index].active = true;
-        }
-      });
+    active: function(id,nextMenus) {
+        this.items.forEach((e, index) => {
+            debugger;
+            this.items[index].grade = true;
+            if (e.menu_id == id) {
+                this.items[index].active = true;
+            }
+        });
+        nextMenus.forEach((e2,index2)=>{
+            e2.active=true;
+            // nextMenus.active=true;
+            e2.grade=true;
+            // nextMenus.grade=true;
+            console.log(this.items[0].active);
+            console.log(this.items[0].grade);
+           });
     },
 
      putData: function(dataResult){
         let  _this=this;
-         // for (let i = 0;  ; i++) {
-         //     if (dataResult[i].nextIdsMenu.nextIdsMenu.length==0
-         //         &&dataResult[i].nextIdsMenu.nextIdsMenu[0].menu_id==""){
-         //         break;
-         //     }
-         //     dataResult=dataResult[i].nextIdsMenu;
-         //     _this.putData(dataResult[i].menu_id,dataResult[i].menu_name
-         //         ,dataResult[i].menu_level,dataResult[i].nextIdsMenu );
-         // }
      },
-     // findNext: function (fatherMenuId,objFirstLevel,level) {
-     //     let _this=this;
-     //     const queryData = {
-     //         menu_id: fatherMenuId
-     //     };
-     //     this.$ajax({
-     //        url: _this.api.queryMenuByNextLevel,
-     //        data:queryData,
-     //        type:"GET",
-     //         success:function (data) {
-     //             data
-     //            findNext();
-     //         },
-     //         error:function (data) {
-     //
-     //         }
-     //
-     //     })
-     //
-     //
-     // }
   },
   mounted() {
       let _this=this;
@@ -201,67 +165,20 @@ export default {
           data: queryData,
           type: "GET",
           success: function (data) {
+              debugger;
               console.log(data);
-              let dataResult = data.data;
-              //渲染一级菜单
-              let datare;
-              for (let i = 0; i <dataResult.length ; i++) {
-                  debugger;
-                  _this.menus.name=dataResult[i].menu_name;
-                  _this.menus.id=dataResult[i].menu_id;
-                  _this.menus.patch= "/index/systemManage";
-                  _this.menus.grade= false;
-                  _this.menus.active=false;
-                  // _this.menus.menu_item=[{name:"",id:"",patch:"",grade:"",active:""}];
-                  // _this.menus.menu_item=findNext(dataResult[i].menu_id,_this.menus,1);
-                  // debugger;
-              }
-              _this.items.push(_this.menus);
-
+              //渲染所有菜单
+              _this.items=data.data;
+              console.log(_this.items);
           },
           error: function (data) {
               console.log(data);
           },
       });
 
-     var findNext =function(fatherMenuId,objFirstLevel,level) {
-
-          const queryData = {
-              menu_id: fatherMenuId
-          };
-          _this.$ajax({
-              url: api.queryMenuByNextLevel,
-              data:queryData,
-              type:"GET",
-              success:function (data) {
-                  debugger;
-                  // let findNextResult;
-                  var myArray=new Array()
-                  for (let i = 0; i <data.data.length ; i++) {
-                      var input1=_this.tmp;
-                      input1.name=data.data[i].menu_name;
-                      input1.id=data.data[i].menu_id;
-                      input1.patch="/index/systemManage";
-                      input1.grade=false;input1.active=false;
-                        // objFirstLevel.menu_item.push(input);
-                      myArray.push(input1);
-                      _this.items[i].menu_item=myArray;
-                      // findNextResult=   findNext(data.data[0].menu_id,objFirstLevel.menu_item[i],data.data[i].menu_level);
-                  }
-                // return objFirstLevel;
-
-              },
-              error:function (data) {
-
-              }
-
-          })
+  },
 
 
-      }
-
-
-  }
 };
 </script>
 
