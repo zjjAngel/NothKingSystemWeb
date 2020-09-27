@@ -136,16 +136,22 @@ export default {
             this.items[index].grade = true;
             if (e.menu_id == id) {
                 this.items[index].active = true;
+            }else {
+                this.items[index].active = false;
             }
         });
-        nextMenus.forEach((e2,index2)=>{
-            e2.active=true;
-            // nextMenus.active=true;
-            e2.grade=true;
-            // nextMenus.grade=true;
-            console.log(this.items[0].active);
-            console.log(this.items[0].grade);
-           });
+        // nextMenus.forEach((e2,index2)=>{
+        //     debugger;
+        //     e2.grade=true;
+        //  if (e2.menu_level_parent == id) {
+        //         e2.active=true;
+        //     }else {
+        //      e2.active=false;
+        //  }
+        //     // nextMenus.grade=true;
+        //     console.log(this.items[0].active);
+        //     console.log(this.items[0].grade);
+        //    });
     },
 
      putData: function(dataResult){

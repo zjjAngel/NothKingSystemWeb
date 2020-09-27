@@ -18,8 +18,7 @@ const router = new Router({
         },
         {
           path: 'demandManage',
-          // component: resolve=>(require(["@/page/demandManage"],resolve)),
-          component: resolve=>(require(["@/page/Inquire"],resolve)),
+          component: resolve=>(require(["@/page/demandManage"],resolve)),
           children: [
             // {
             //   path: 'statistics',
@@ -37,8 +36,7 @@ const router = new Router({
         },
         {
           path: 'systemManage',
-          // component: resolve=>(require(["@/page/systemManage"],resolve)),
-          component: resolve=>(require(["@/page/user"],resolve)),
+          component: resolve=>(require(["@/page/systemManage"],resolve)),
           children: [
             {
               path: 'user',
