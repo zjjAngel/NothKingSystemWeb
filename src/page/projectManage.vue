@@ -10,10 +10,11 @@
             <span>项目名称</span>
             <el-select style="width:10vw" v-model="prodname" size="mini" placeholder="请选择">
               <el-option
-                v-for="item in prodnameOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in prod_name"
+                :key="item.prodno"
+                :label="item.prodname"
+                :value="item.prodno"
+                 @click.native="checkFather(item.prodno)"
               ></el-option>
             </el-select>
           </template>
@@ -23,10 +24,10 @@
             <span>项目类型</span>
             <el-select style="width:10vw" v-model="prodtype" size="mini" placeholder="请选择">
               <el-option
-                v-for="item in prodtypeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in prod_type"
+                :key="item.prodno"
+                :label="item.prodtype"
+                :value="item.prodno"
               ></el-option>
             </el-select>
           </template>
@@ -48,14 +49,16 @@
         </el-col>
         <el-col :span="5">
           <template>
+              
             <span>状态</span>
             <el-select style="width:10vw" v-model="status" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in statusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+                <!-- :v-for="item in statusOptions"
+                :label="item.status"
+                :value="item.prodno" -->
+              <el-option label="进行中" value="A" @click.native="addstatus()"></el-option>
+              <el-option label="已结束" value="E" @click.native="addstatus()"></el-option>
+
+         
             </el-select>
           </template>
         </el-col>
@@ -76,8 +79,8 @@
               <el-table-column prop="prodname" align="center" label="项目名称"></el-table-column>
               <el-table-column prop="prodtype" align="center" label="项目类型"></el-table-column>
               <el-table-column prop="starttime" align="center" label="起始时间"></el-table-column>
-              <el-table-column prop="status" align="center" label="状态"></el-table-column>
-              <el-table-column fixed="right" align="center" label="操作">
+              <el-table-column prop="status" align="center" label="状态" :formatter="stateFormat" ></el-table-column>
+              <el-table-column fixed="right" align="center" label="操作" >
                 <template slot-scope="scope">
                   <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
                   <el-button @click="handleClick(scope.row, 'less')" type="text" size="small">删除</el-button>
@@ -87,6 +90,31 @@
           </template>
         </el-row>
       </el-row>
+      <el-row>
+        <div class="pageStyle">
+          <div class="pageChange">
+            每页显示条数
+            <el-input-number
+              v-model="pageSize"
+              controls-position="right"
+              @change="handleChange"
+              :min="1"
+              :max="15"
+              size="small"
+            ></el-input-number>
+          </div>
+          <div>
+            <el-pagination
+              background
+              layout="pager"
+              :page-size="pageSize"
+              @current-change="pageQuery"
+              :total="total"
+            ></el-pagination>
+          </div>
+        </div>
+      </el-row>
+
     </div>
     <prodFormbox :formbox="formbox" :formboxmsg="formboxmsg" @close="closebox" @submit="submitbox"></prodFormbox>
   </div>
@@ -100,73 +128,20 @@ import prodFormbox from "@/components/prodFormbox";
 export default {
   name: "projectManage",
   data() {
+   
+    
     return {
-      prodnameOptions: [
-        {
-          value: "选项1",
-          label: "中行"
-        },
-        {
-          value: "选项2",
-          label: "农信"
-        },
-        {
-          value: "选项3",
-          label: "信合"
-        },
-        {
-          value: "选项4",
-          label: "汇丰"
-        },
-        {
-          value: "选项5",
-          label: "花旗"
-        }
-      ],
-      prodtypeOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      statusOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
+
+
+      pageNum: 1,
+      pageSize: 10,
+      total: 0, //总条数
+
+      // prodnameOptions: "",
+      // prodtypeOptions: "",
+      prod_name:[],
+      prod_type:[],
+      // statusOptions: [],
       prodname: "",
       prodtype: "",
       starttime: "",
@@ -174,6 +149,7 @@ export default {
       tableData: {
         tableDataItem: []
       },
+      tableDataItem:[],
       formbox: 0,
       formboxmsg: {}
     };
@@ -181,7 +157,89 @@ export default {
   components: {
     prodFormbox
   },
+
+mounted() {
+
+  let _this = this;
+  const beforeMount = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+
+      };
+  this.$ajax({
+      url: api.projectQuery,
+      data:{},
+      type: "POST",
+      success: function (data) {
+        // console.log("接口返回值",data)
+        debugger;
+      console.log(data);
+       _this.prod_name = data.data
+       _this.prod_type = data.data;
+       _this.statusOptions = data.data;
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+
+
+    beforeMount:  {
+    let _this = this;
+
+    const beforeMount = {
+      pageNum: this.pageNum,
+      pageSize: this.pageSize,
+    
+      }
+       this.$ajax({
+      url: api.projectQuery,
+      data: {
+         pageNum: this.pageNum,
+      pageSize: this.pageSize,
+      },
+      type: "POST",
+      success: function(data) {
+        console.log(data);
+        _this.$set(_this.tableData, "tableDataItem", data.data);
+        
+      },
+      error: function(data) {
+        if (data == 500) {
+        }
+      }
+    });
+  }
+
+},
+
   methods: {
+
+    
+
+        checkFather(menuId){
+          debugger;
+          let _this = this;
+          _this.prod_type.forEach((e,index)=>{
+                if(e.prodno==menuId){
+                 _this.prodtype=e.prodtype;
+                }
+          });
+        
+        },
+      stateFormat(row, column) {
+        debugger;
+          console.log(row.status)
+          console.log('column:'+column);
+          if (row.status === 'A') {
+              return '进行中'
+          } else if (row.state === 'E') {
+              return '已结束'
+          }else {
+              return '异常状态'
+          }
+      },
+
     handleClick(row, action) {
       let _this = this;
       console.log(row.custno);
@@ -225,6 +283,55 @@ export default {
         this.formboxmsg = row;
       }
     },
+
+     handleChange(e) {
+         console.log("api:"+api);
+       debugger;
+      console.log("分页调整", e);
+      let _this = this;
+      _this.pageSize = e;
+      const beforeMount = {
+        pageNum: _this.pageNum,
+        pageSize: _this.pageSize,
+      };
+       this.$ajax({
+        url: "http://146.56.200.9:8067/project/query",
+        data: beforeMount,
+        type: "POST",
+        success: function (data) {
+          // _this.$set(_this.tableData,"tableDataItem",data.data) ;
+          _this.tableData.tableDataItem=data.data;
+          _this.total = 20;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+     pageQuery(val) {
+       debugger;
+      let _this = this;
+      _this.pageNum = val;
+      const beforeMount = {
+        pageNum: val,
+        pageSize: _this.pageSize,
+      
+        // roleId: this.projectQuery,//要改
+      };
+      this.$ajax({
+        url: api.projectQuery,//要改
+        data: beforeMount,
+        type: "POST",
+        success: function (data) {
+          _this.tableData.tableDataItem = data.data;
+          _this.total = 20;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+
     closebox(e) {
       this.formbox = 0;
       this.$message({
@@ -278,28 +385,15 @@ export default {
     },
     addcust() {
       this.formbox = 2;
+      
     }
   },
-  beforeMount: function() {
-    let _this = this;
-    this.$ajax({
-      url: api.projectQuery,
-      data: {
-        size: 10,
-        page: 1
-      },
-      type: "POST",
-      success: function(data) {
-        console.log(data);
-        _this.$set(_this.tableData, "tableDataItem", data.data);
-      },
-      error: function(data) {
-        if (data == 500) {
-        }
-      }
-    });
-  }
-};
+  
+   
+
+    
+  
+}
 </script>
 
 <style scoped>
@@ -342,5 +436,15 @@ export default {
   margin-bottom: 10px;
   margin-right: 50px;
   text-align: right;
+}
+.pageStyle {
+  height: 35px;
+  margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.pageChange {
+  display: flex;
+  align-items: center;
 }
 </style>

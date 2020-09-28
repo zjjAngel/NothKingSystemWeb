@@ -220,7 +220,7 @@ export default {
               type:"DELETE",
 
               success: function (data) {
-                 debugger;
+                 
                 _this.formbox = 0;
                 // _this.formboxmsg.menuName = rowmenuName;//要改
                 console.log(data);
@@ -405,7 +405,7 @@ export default {
       let _this = this;
         
       if (e.formbox == 1) {
-        debugger;
+        
         // 编辑
         e.formboxmsg.menuName = e.formboxmsg.row.menu_name;
         e.formboxmsg.menuId = e.formboxmsg.row.menu_id;

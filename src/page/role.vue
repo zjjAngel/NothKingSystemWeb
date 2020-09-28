@@ -75,8 +75,8 @@
           </div>
           <!-- <div>
             <el-pagination background layout="pager" :total="total"></el-pagination>
-          </div>
-        </div> -->
+          </div> -->
+        </div>
       </el-row>
     </div>
     <roleEditAdd
@@ -154,6 +154,7 @@ this.$ajax({
       type: "GET",
       success: function (data) {
         // console.log("接口返回值",data)
+      
         _this.roleNameList = data.data.list;
         _this.roleselect = data;
       },
@@ -162,18 +163,6 @@ this.$ajax({
       },
     });
 
-    
-    // this.$ajax({
-    //   url:api.roleNameList,
-    //   data:{},
-    //   type:"GET",
-    //   success:function(data){
-    //     _this.roleselect = data;
-    //   },
-    //   error: function (data){
-    //     console.log(data);
-    //   },
-    // });
 
       const queryData = {
           pageNum: this.pageNum,
@@ -281,7 +270,49 @@ this.$ajax({
     handleChange(e) {
       console.log("分页调整", e);
       this.pageSize = e;
+      let _this = this;
+      const queryData = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      this.$ajax({
+        url: api.roleNameList,//要改
+        data: queryData,
+        type: "GET",
+        success: function (data) {
+          _this.tableData = data.data.list;
+          _this.total = data.data.total;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
     },
+    
+    pageQuery(val) {
+      let _this = this;
+      _this.pageNum = val;
+      const queryData = {
+        pageNum: val,
+        pageSize: _this.pageSize,
+        // userId: this.requireCust,//要改
+        roleId: this.requireCust,//要改
+      };
+      this.$ajax({
+        url: api.roleNameList,//要改
+        data: queryData,
+        type: "GET",
+        success: function (data) {
+          _this.tableData = data.data.list;
+          _this.total = data.data.total;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+
+
     closebox(e) {
       this.formbox = 0;
       this.$message({
@@ -387,7 +418,7 @@ this.$ajax({
     addcust() {
       let _this=this;
       this.formbox = 2;
-      
+      debugger;
       _this.formboxmsg.ROLE_NAME = "";
       _this.formboxmsg.BACK_UP = "";
     },
