@@ -447,6 +447,7 @@ mounted(){
     },
     addcust() {
       this.reqbox = 2;
+      this.reqmsg={};
     },
     queryData(){
        let _this = this;
@@ -533,7 +534,7 @@ mounted(){
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-right: 50px;
+  margin-right: 90px;
   text-align: right;
 }
 .pageChange {

@@ -11,9 +11,9 @@
             <el-select style="width:10vw" v-model="prodname" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in prod_name"
-                :key="item.prodno"
+                :key="item.prodname"
                 :label="item.prodname"
-                :value="item.prodno"
+                :value="item.prodname"
                  @click.native="checkFather(item.prodno)"
               ></el-option>
             </el-select>
@@ -25,9 +25,9 @@
             <el-select style="width:10vw" v-model="prodtype" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in prod_type"
-                :key="item.prodno"
+                :key="item.prodtype"
                 :label="item.prodtype"
-                :value="item.prodno"
+                :value="item.prodtype"
               ></el-option>
             </el-select>
           </template>
@@ -63,7 +63,7 @@
           </template>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" size="mini">搜索</el-button>
+          <el-button type="primary" size="mini" @click="queryData">搜索</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -167,16 +167,31 @@ mounted() {
 
       };
   this.$ajax({
-      url: api.projectQuery,
-      data:{},
+      url: api.queryForListProd,
+      data:{option:"01"},
       type: "POST",
       success: function (data) {
         // console.log("接口返回值",data)
         debugger;
       console.log(data);
        _this.prod_name = data.data
+      //  _this.prod_type = data.data;
+      //  _this.statusOptions = data.data;
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+
+    this.$ajax({
+      url: api.queryForListProd,
+      data:{option:"02"},
+      type: "POST",
+      success: function (data) {
+        // console.log("接口返回值",data)
+        debugger;
+      console.log(data);
        _this.prod_type = data.data;
-       _this.statusOptions = data.data;
       },
       error: function (data) {
         console.log(data);
@@ -213,7 +228,33 @@ mounted() {
 
 },
 
+
   methods: {
+    queryData(){
+      debugger;
+       let _this= this;
+      this.$ajax({
+      url: api.projectQuery,
+      data: {
+        prodname:_this.prodname==""?null:_this.prodname,
+        prodtype:_this.prodtype==""?null:_this.prodtype,
+        status:_this.status==""?null:_this.status,
+        starttime:_this.starttime==""?null:_this.starttime,
+       pageNum: this.pageNum,
+      pageSize: this.pageSize,
+      },
+      type: "POST",
+      success: function(data) {
+        console.log(data);
+        _this.$set(_this.tableData, "tableDataItem", data.data);
+        
+      },
+      error: function(data) {
+        if (data == 500) {
+        }
+      }
+    });
+    },
 
     
 
@@ -264,6 +305,7 @@ mounted() {
                   type: "success",
                   message: "删除成功!"
                 });
+                _this.queryData();
               },
               error: function(data) {
                 if (data == 500) {
@@ -375,6 +417,7 @@ mounted() {
               type: "success",
               message: "新增成功!"
             });
+            _this.queryData();
           },
           error: function(data) {
             if (data !== 500) {
@@ -390,7 +433,7 @@ mounted() {
     },
     addcust() {
       this.formbox = 2;
-      
+      this.formboxmsg={};
     }
   },
   

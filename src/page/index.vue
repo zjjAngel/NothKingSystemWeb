@@ -7,21 +7,21 @@
           <template v-for="item of items">
             <jbf-menu
               class="first-menu"
-              :name="item.name"
-              :menuid="item.id"
-              :key="item.id"
+              :name="item.menu_name"
+              :menuid="item.menu_id"
+              :key="item.menu_id"
               :url="item.patch"
-              @isActive="active(item.id)"
+              @isActive="active(item.menu_id,item.nextIdsMenu)"
             >
 
               <template v-if="item.grade">
                 <div v-show="item.active">
                   <jbf-menu
-                    v-for="menu of item.menu_item"
-                    :name="menu.name"
+                    v-for="menu of item.nextIdsMenu"
+                    :name="menu.menu_name"
                     :url="menu.patch"
-                    :menuid="menu.id"
-                    :key="menu.id"
+                    :menuid="menu.menu_id"
+                    :key="menu.menu_id"
                   >
                   </jbf-menu>
                 </div>
@@ -54,90 +54,75 @@ export default {
       username: '吴彦祖',
       character: '超级管理员',
       items: [
-        {
-          name: "需求管理",
-          id: "menuid0",
-          grade: true,
-          active: true,
-          patch: "/index/demandManage",
-          menu_item: [
-            // {
-            //   name: "需求统计",
-            //   id: "menuid00",
-            //   grade: false,
-            //   active: false,
-            //   patch: "/index/demandManage/statistics"
-            // },
-            {
-              name: "需求查询",
-              id: "menuid01",
-              grade: false,
-              active: false,
-              patch: "/index/demandManage/Inquire"
-            }
-          ]
-        },
-        {
-          name: "客户管理",
-          id: "menuid1",
-          grade: false,
-          active: false,
-          patch: "/index/clientManage"
-        },
-        {
-          name: "项目管理",
-          id: "menuid2",
-          grade: false,
-          active: false,
-          patch: "/index/projectManage"
-        },
-        {
-          name: "系统管理",
-          id: "menuid3",
-          grade: true,
-          active: false,
-          patch: "/index/systemManage",
-          menu_item: [
-            {
-              name: "用户管理",
-              id: "menuid30",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/user"
-            },
-            {
-              name: "角色管理",
-              id: "menuid31",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/role"
-            },
-            {
-              name: "菜单管理",
-              id: "menuid32",
-              grade: false,
-              active: false,
-              patch: "/index/systemManage/menu"
-            }
-          ]
-        }
-      ],
-        menus:{
-            name: "",
-            id: "",
-            grade: false,
-            active: false,
-            patch: "",
-            menu_item:[]
-        },
-        tmp:{
-            name: "",
-            id: "",
-            grade: false,
-            active: false,
-            patch: "",
-            menu_item:[]
-        }
+        // {
+        //   menu_name: "需求管理",
+        //   menu_id: "menuid0",
+        //   grade: true,
+        //   active: true,
+        //   patch: "/index/demandManage",
+        //   nextIdsMenu: [
+        //     // {
+        //     //   name: "需求统计",
+        //     //   id: "menuid00",
+        //     //   grade: false,
+        //     //   active: false,
+        //     //   patch: "/index/demandManage/statistics"
+        //     // },
+        //     {
+        //       menu_name: "需求查询",
+        //       menu_id: "menuid01",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/demandManage/Inquire"
+        //     }
+        //   ]
+        // },
+        // {
+        //   menu_name: "客户管理",
+        //   menu_id: "menuid1",
+        //   grade: false,
+        //   active: false,
+        //   patch: "/index/clientManage"
+        // },
+        // {
+        //   menu_name: "项目管理",
+        //   menu_id: "menuid2",
+        //   grade: false,
+        //   active: false,
+        //   patch: "/index/projectManage"
+        // },
+        // {
+        //   menu_name: "系统管理",
+        //   menu_id: "menuid3",
+        //   grade: true,
+        //   active: false,
+        //   patch: "/index/systemManage",
+        //   nextIdsMenu: [
+        //     {
+        //       name: "用户管理",
+        //       id: "menuid30",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/user"
+        //     },
+        //     {
+        //       name: "角色管理",
+        //       id: "menuid31",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/role"
+        //     },
+        //     {
+        //       name: "菜单管理",
+        //       id: "menuid32",
+        //       grade: false,
+        //       active: false,
+        //       patch: "/index/systemManage/menu"
+        //     }
+        //   ]
+        // }
+      ]
+     
     };
   },
   components: {
@@ -145,13 +130,24 @@ export default {
     pageHead
   },
   methods: {
-    active: function(id) {
+    active: function(id,nextMenus) {
+      debugger; 
       this.items.forEach((e, index) => {
-        this.items[index].active = false;
-        if (e.id == id) {
+        this.items[index].grade = true; 
+        if (e.menu_id == id) {
           this.items[index].active = true;
-        }
+        }else {
+           this.items[index].active = false;
+         }
       });
+       nextMenus.forEach((e2,index2)=>{
+            e2.grade=true;
+            e2.active=true;
+            // nextMenus.active=true;
+            // nextMenus.grade=true;
+            console.log(this.items[0].active);
+            console.log(this.items[0].grade);
+           });
     },
 
      putData: function(dataResult){
@@ -192,9 +188,11 @@ export default {
       let _this=this;
       console.log(JSON.parse(sessionStorage.getItem("context")));
       let context=  JSON.parse(sessionStorage.getItem("context"));
+      debugger;
       const queryData = {
           role_Id: context.user_role
       };
+      _this.character=context.role_name;
      _this.username=context.user_name;
       this.$ajax({
           url: api.queryMenuByRoleId,
@@ -203,20 +201,8 @@ export default {
           success: function (data) {
               console.log(data);
               let dataResult = data.data;
-              //渲染一级菜单
-              let datare;
-              for (let i = 0; i <dataResult.length ; i++) {
-                  
-                  _this.menus.name=dataResult[i].menu_name;
-                  _this.menus.id=dataResult[i].menu_id;
-                  _this.menus.patch= "/index/systemManage";
-                  _this.menus.grade= false;
-                  _this.menus.active=false;
-                  // _this.menus.menu_item=[{name:"",id:"",patch:"",grade:"",active:""}];
-                  // _this.menus.menu_item=findNext(dataResult[i].menu_id,_this.menus,1);
-                  // debugger;
-              }
-              _this.items.push(_this.menus);
+              //渲染一级菜单 
+              _this.items= dataResult;
 
           },
           error: function (data) {

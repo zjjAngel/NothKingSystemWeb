@@ -18,6 +18,7 @@ export const custDel = "http://192.168.0.115:8067/api/cust/del" // 客户编辑
 export const queryForList = "http://192.168.0.115:8067/api/cust/queryForList"  
 
 
+
 /**
  * 项目管理
  */
@@ -26,6 +27,7 @@ export const projectQuery = "http://192.168.0.115:8067/api/project/query" // 项
 export const projectAdd = "http://192.168.0.115:8067/api/project/add" // 项目添加
 export const projectUpdate = "http://192.168.0.115:8067/api/project/upd" // 项目编辑
 export const projectDel = "http://192.168.0.115:8067/api/project/del" // 项目编辑
+export const queryForListProd= "http://192.168.0.115:8067/api/project/queryForList"
 
 
 

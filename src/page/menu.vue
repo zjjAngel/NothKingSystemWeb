@@ -51,7 +51,7 @@
       <el-row>
         <el-row class="addcust">
           <el-col>
-            <span @click="addcust">+添加</span>
+            <span @click="addcust">+预添加</span>
           </el-col>
         </el-row>
       <el-row>

@@ -16,7 +16,7 @@
                 v-for="item in roleNameList"
                 :key="item.role_ID"
                 :label="item.role_NAME"
-                :value="item.role_ID"
+                :value="item.role_NAME"
               ></el-option>
             </el-select>
           </template>
@@ -163,6 +163,7 @@ this.$ajax({
 
 
       const queryData = {
+
           pageNum: this.pageNum,
           pageSize: this.pageSize,
       };
@@ -238,7 +239,7 @@ this.$ajax({
         console.log("select 中对应的value" +value);
         // console.log("select 中对应的label" +label);
         
-        this.inputQuery={"roleId":value};
+        this.inputQuery={roleName:value};
     },
     queryData(){
       let _this = this;
@@ -249,7 +250,8 @@ this.$ajax({
       const queryData = {
       pageNum: this.pageNum,
       pageSize: this.pageSize,
-      "roleId": this.inputQuery.roleId
+      // "roleId": this.inputQuery.roleId
+      roleName:this.inputQuery.roleName
       };
       this.$ajax({
         url: api.roleNameList,
@@ -396,10 +398,11 @@ this.$ajax({
             _this.$message({
               type: "success",
               message: "新增成功!若想角色生效，请分配用户！",
-            });
-           
+            });     
+              _this.roleNameValue=''
+             _this.inputQuery.roleName="";
           _this.queryData();
-            
+           
           },
           error: function (data) {
             if (data !== 500) {

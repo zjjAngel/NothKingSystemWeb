@@ -23,7 +23,8 @@ export default {
             context:{
                 user_id:'',
                 user_name:'',
-                user_role:''
+                user_role:'',
+                role_name:''
             }
         }
     },
@@ -44,6 +45,8 @@ export default {
                _this.context.user_id=data.data.user_id;
                 _this.context.user_name=data.data.user_name;
                 _this.context.user_role=data.data.user_role;
+                debugger;
+                _this.context.role_name=data.data.role_name;
                sessionStorage.setItem("session", data.data)
                sessionStorage.setItem('sessionId',data.data.sessionId)
                sessionStorage.setItem("context",JSON.stringify(_this.context));
