@@ -22,7 +22,7 @@
             </el-select>
           </template>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" v-show="ifshow">
           <template>
             <span>项目</span>
             <el-select style="width:10vw" v-model="project" size="mini" placeholder="请选择" id="resIn">
@@ -41,9 +41,9 @@
             <el-select style="width:10vw" v-model="position" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in positionOptions"
-                :key="item.numNo"
+                :key="item.position"
                 :label="item.position"
-                :value="item.numNo"
+                :value="item.position"
               ></el-option>
             </el-select>
           </template>
@@ -56,9 +56,9 @@
 
               <el-option
                 v-for="item in priorityOptions"
-                :key="item.numNo"
+                :key="item.priority"
                 :label="item.priority"
-                :value="item.numNo"
+                :value="item.priority"
               ></el-option>
             </el-select>
           </template>
@@ -176,7 +176,8 @@ export default {
        },
         formboxmsg:{
           status:""
-        }
+        },
+        ifshow:false
      };
   },
   components: {
@@ -206,24 +207,39 @@ mounted(){
       type:"POST",
       success:function(data){
 
-        console.log.data;
+        console.log(data);
          _this.tableData= data.data;
-        _this. positionOptions= data.data;
-        _this.priorityOptions = data.data;
+        // _this. positionOptions= data.data;
+        // _this.priorityOptions = data.data;
       },
       error:function(data){
         console.log(data);
       },
     })
-
-quer
-
+    debugger;
+    this.$ajax({
+      url:api.queryPointWhere,
+      data:{},
+      type:"GET",
+      success:function(data){
+       _this.positionOptions= data.data;
+      },
+       error:function(data){
+        console.log(data);
+      },
+    })
+    _this.priorityOptions=[{"priority":"高"},{"priority":"中"},{"priority":"低"}];
+   
 },
 
   methods:{
     changeInquire(obj){
-
       let _this = this;
+      if(null==obj){
+        _this.ifshow=false;
+        return;
+      }
+      debugger;
       this.$ajax({
       url:api.RequireSearch,
       data:{"option":"02"
@@ -233,7 +249,24 @@ quer
       success:function(data){
         _this.requireCustOptions=data.data;
         document.getElementById("resIn").value=data.data[0].project;
+        _this.ifshow=true;
+         _this.refresh();
+      },
+      error: function (data){
+        console.log(data);
+      },
+    });
+    },
+    refresh(){
+       let _this = this;
+ 
+      this.$ajax({
+      url:api.RequireSearch,
+      data:{"option":"01"},//查询需求客户
+      type:"POST",
+      success:function(data){
 
+        _this.requireCustOptions=data.data;
       },
       error: function (data){
         console.log(data);
@@ -241,6 +274,7 @@ quer
     });
     },
     handleClick(row, action) {
+      debugger;
       console.log(row);
       let _this = this
       if (action == "less") {
@@ -254,7 +288,7 @@ quer
               url: api.requireDeleteRequire,
               data: {
                 //"prono": row.id
-                custno:row.number,
+                numNo:row.numNo,
               },
               type: "POST",
               success: function(data) {
@@ -264,6 +298,7 @@ quer
                   type: "success",
                   message: "删除成功!"
                 });
+                _this.queryData();
               },
               error: function(data) {
                 if (data == 500) {
@@ -300,17 +335,18 @@ quer
       console.log("分页调整", e);
       let _this = this;
       _this.pageSize = e;
-      const beforeMount = {
+      const req= {
+        option:"03",
         page: _this.pageNum,
         size: _this.pageSize,
       };
        this.$ajax({
         url: api.RequireSearch,
-        data: RequireSearch,
+        data: req,
         type: "POST",
         success: function (data) {
           // _this.$set(_this.tableData,"tableDataItem",data.data) ;
-          _this.tableData.tableDataItem=data.data;
+          _this.tableData=data.data;
           if(data.data.length==0){
              _this.total =0;
           }else{
@@ -327,16 +363,18 @@ quer
        debugger;
       let _this = this;
       _this.pageNum = val;
-      const beforeMount = {
+      const req= {
+        option: "03",
         page: val,
         size: _this.pageSize,
       };
       this.$ajax({
         url: api.RequireSearch,//要改
-        data: requi,
+        data: req,
         type: "POST",
         success: function (data) {
-          _this.tableData.tableDataItem = data.data;
+          debugger;
+          _this.tableData = data.data;
           _this.total = data.data[0].totalsize;
         },
         error: function (data) {
@@ -409,6 +447,31 @@ quer
     },
     addcust() {
       this.reqbox = 2;
+    },
+    queryData(){
+       let _this = this;
+     this.$ajax({
+
+      url:api.RequireSearch,
+      data:{
+       option:"03",
+       requireCust:_this.requireCust==""?null:_this.requireCust,
+       project:_this.project==""?null:_this.project,
+       position:_this.position==""?null:_this.position,
+       priority:_this.priority==""?null:_this.priority
+      },
+      type:"POST",
+      success:function(data){
+          debugger;
+         console.log(data);
+         _this.tableData= data.data;
+        _this. positionOptions= data.data;
+        _this.priorityOptions = data.data;
+      },
+      error:function(data){
+        console.log(data);
+      },
+    })
     }
   },
   // beforeMount: function() {

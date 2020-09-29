@@ -15,6 +15,7 @@ export const custQuery = "http://192.168.0.115:8067/api/cust/query" // 客户查
 export const custAdd = "http://192.168.0.115:8067/api/cust/add" // 客户添加
 export const custUpdate = "http://192.168.0.115:8067/api/cust/update" // 客户编辑
 export const custDel = "http://192.168.0.115:8067/api/cust/del" // 客户编辑
+export const queryForList = "http://192.168.0.115:8067/api/cust/queryForList"  
 
 
 /**
@@ -46,6 +47,7 @@ export const requireSelectRequireCust = "http://192.168.0.115:8067/api/require/s
 export const requireSelectRequireByCustName = "http://192.168.0.115:8067/api/require/selectRequireByCustName" // 根据客户查询需求项目信息(头部枚举值)
 export const RequireSearch = "http://192.168.0.115:8067/api/require/selectRequire" // "http://192.168.0.115:8067/require/selectRequire" //需求管理的搜索
 
+export const queryPointWhere="http://192.168.0.115:8067/api/NothKingSystem/require/queryPointWhere";
 
 
 /*

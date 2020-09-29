@@ -11,9 +11,9 @@
             <el-select style="width:10vw" v-model="custname" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in clientOptions"
-                :key="item.custno"
+                :key="item.custname"
                 :label="item.custname"
-                :value="item.custno"
+                :value="item.custname"
               ></el-option>
             </el-select>
           </template>
@@ -37,9 +37,9 @@
             <el-select style="width:10vw" v-model="region" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in areaOptions"
-                :key="item.custno"
+                :key="item.region"
                 :label="item.region"
-                :value="item.custno"
+                :value="item.region"
               ></el-option>
             </el-select>
           </template>
@@ -63,7 +63,7 @@
           </template>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" size="mini">搜索</el-button>
+          <el-button type="primary" size="mini"  @click="queryData">搜索</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -147,7 +147,8 @@ export default {
         tableDataItem: []
       },
       formbox: 0,
-      formboxmsg: {}
+      formboxmsg: {},
+      areaOptions:[{region:"西北区"},{region:"华南区"},{region:"华东区"},{region:"鸟不拉屎区"}]
     };
   },
   components: {
@@ -184,17 +185,45 @@ mounted (){
       }
     });
   }
+  debugger;
   this.$ajax({
-      url: api.custQuery,
-      data:{},
+      url: api.queryForList,
+      data:{option:"01"},
       type: "POST",
       success: function (data) {
         // console.log("接口返回值",data)
         debugger;
       console.log(data);
        _this.clientOptions = data.data
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+
+      this.$ajax({
+      url: api.queryForList,
+      data:{option:"02"},
+      type: "POST",
+      success: function (data) {
+        // console.log("接口返回值",data)
+        debugger;
+      console.log(data);
        _this.firmOptions = data.data;
-       _this.areaOptions = data.data;
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+
+    this.$ajax({
+      url: api.queryForList,
+      data:{option:"04"},
+      type: "POST",
+      success: function (data) {
+        // console.log("接口返回值",data)
+        debugger;
+      console.log(data);
         _this.contactPersonOptions = data.data;
       },
       error: function (data) {
@@ -229,6 +258,11 @@ mounted (){
                   message: "删除成功!"
                 });
                 //_this.$set(_this.tableData, "tableDataItem", data.data);
+                  _this.custname="";
+                _this.company="";
+                _this.region="";
+                 _this.relationname="";
+                _this.queryData();
               },
               error: function(data) {
                 if (data == 500) {
@@ -341,6 +375,11 @@ mounted (){
               type: "success",
               message: "新增成功!"
             });
+        _this.custname="";
+      _this.company="";
+      _this.region="";
+      _this.relationname="";
+            _this.queryData();
           },
           error: function(data) {
             if (data !== 500) {
@@ -357,6 +396,29 @@ mounted (){
     addcust() {
       this.formbox = 2;
       this.formboxmsg={};
+    },
+    queryData(){
+      debugger;
+      let _this=this;
+     this.$ajax({
+      url: api.custQuery,
+      data: {
+       custname:_this.custname==""?null:_this.custname,
+       company:_this.company==""?null:_this.company,
+       region:_this.region==""?null:_this.region,
+       relationname:_this.relationname==""?null:_this.relationname,
+       pageNum: this.pageNum,
+      pageSize: this.pageSize,
+      },
+      type: "POST",
+      success: function(data) {
+        _this.$set(_this.tableData, "tableDataItem", data.data);
+      },
+      error: function(data) {
+        if (data == 500) {
+        }
+      }
+    });
     }
   },
   
