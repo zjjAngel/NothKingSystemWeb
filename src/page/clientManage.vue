@@ -8,12 +8,12 @@
         <el-col :span="5">
           <template>
             <span>客户姓名</span>
-            <el-select style="width:10vw" v-model="userValue" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="custname" size="mini" placeholder="请选择">
               <el-option
-                v-for="item in userOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in clientOptions"
+                :key="item.custno"
+                :label="item.custname"
+                :value="item.custno"
               ></el-option>
             </el-select>
           </template>
@@ -21,12 +21,12 @@
         <el-col :span="5">
           <template>
             <span>公司</span>
-            <el-select style="width:10vw" v-model="firmValue" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="company" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in firmOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.custno"
+                :label="item.company"
+                :value="item.custno"
               ></el-option>
             </el-select>
           </template>
@@ -34,12 +34,12 @@
         <el-col :span="5">
           <template>
             <span>区域</span>
-            <el-select style="width:10vw" v-model="areaValue" size="mini" placeholder="请选择">
+            <el-select style="width:10vw" v-model="region" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in areaOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.custno"
+                :label="item.region"
+                :value="item.custno"
               ></el-option>
             </el-select>
           </template>
@@ -49,15 +49,15 @@
             <span>维系人</span>
             <el-select
               style="width:10vw"
-              v-model="contactPersonValue"
+              v-model="relationname"
               size="mini"
               placeholder="请选择"
             >
               <el-option
                 v-for="item in contactPersonOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.custno"
+                :label="item.relationname"
+                :value="item.custno"
               ></el-option>
             </el-select>
           </template>
@@ -93,6 +93,30 @@
           </template>
         </el-row>
       </el-row>
+       <el-row>
+        <div class="pageStyle">
+          <div class="pageChange">
+            每页显示条数
+            <el-input-number
+              v-model="pageSize"
+              controls-position="right"
+              @change="handleChange"
+              :min="1"
+              :max="15"
+              size="small"
+            ></el-input-number>
+          </div>
+          <div>
+            <el-pagination
+              background
+              layout="pager"
+              :page-size="pageSize"
+              @current-change="pageQuery"
+              :total="total"
+            ></el-pagination>
+          </div>
+        </div>
+      </el-row>
     </div>
     <clientFormbox :formbox="formbox" :formboxmsg="formboxmsg" @close="closebox" @submit="submitbox"></clientFormbox>
   </div>
@@ -107,98 +131,18 @@ export default {
   name: "clientManage",
   data() {
     return {
-      userOptions: [
-        {
-          value: "选项1",
-          label: "中行"
-        },
-        {
-          value: "选项2",
-          label: "农信"
-        },
-        {
-          value: "选项3",
-          label: "信合"
-        },
-        {
-          value: "选项4",
-          label: "汇丰"
-        },
-        {
-          value: "选项5",
-          label: "花旗"
-        }
-      ],
-      firmOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      areaOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      contactPersonOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      userValue: "",
-      firmValue: "",
-      areaValue: "",
-      contactPersonValue: "",
+
+       pageNum: 1,
+      pageSize: 10,
+      total: 0, //总条数
+      clientOptions: [],
+      firmOptions: [],
+      areaOptions: [],
+      contactPersonOptions: [],
+      custname:"",
+      company:"",
+      region:"",
+      relationname:"",
       tableData: {
         tableDataItem: []
       },
@@ -209,6 +153,57 @@ export default {
   components: {
     clientFormbox
   },
+
+mounted (){
+  let _this = this;
+  const beforeMount = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+      };
+
+      beforeMount: {
+    let _this = this;
+    const beforeMount = {
+      pageNum: this.pageNum,
+      pageSize: this.pageSize,
+    
+      }
+    this.$ajax({
+      url: api.custQuery,
+      data: {
+       pageNum: this.pageNum,
+      pageSize: this.pageSize,
+      },
+      type: "POST",
+      success: function(data) {
+        _this.$set(_this.tableData, "tableDataItem", data.data);
+      },
+      error: function(data) {
+        if (data == 500) {
+        }
+      }
+    });
+  }
+  this.$ajax({
+      url: api.custQuery,
+      data:{},
+      type: "POST",
+      success: function (data) {
+        // console.log("接口返回值",data)
+        debugger;
+      console.log(data);
+       _this.clientOptions = data.data
+       _this.firmOptions = data.data;
+       _this.areaOptions = data.data;
+        _this.contactPersonOptions = data.data;
+      },
+      error: function (data) {
+        console.log(data);
+      },
+    });
+    
+},
+
   methods: {
     handleClick(row, action) {
       let _this = this
@@ -253,6 +248,59 @@ export default {
         this.formboxmsg = row;
       }
     },
+
+  handleChange(e) {
+         console.log("api:"+api);
+       debugger;
+      console.log("分页调整", e);
+      let _this = this;
+      _this.pageSize = e;
+      const beforeMount = {
+        page: _this.pageNum,
+        size: _this.pageSize,
+      };
+       this.$ajax({
+        url: api.custQuery,//如果不行 该改儿
+        data: beforeMount,
+        type: "POST",
+        success: function (data) {
+          // _this.$set(_this.tableData,"tableDataItem",data.data) ;
+          _this.tableData.tableDataItem=data.data;
+          if(data.data.length==0){
+             _this.total =0;
+          }else{
+            _this.total = data.data[0].totalsize;
+          }
+          
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+     pageQuery(val) {
+       debugger;
+      let _this = this;
+      _this.pageNum = val;
+      const beforeMount = {
+        page: val,
+        size: _this.pageSize,
+      };
+      this.$ajax({
+        url: api.custQuery,//要改
+        data: beforeMount,
+        type: "POST",
+        success: function (data) {
+          _this.tableData.tableDataItem = data.data;
+          _this.total = data.data[0].totalsize;
+        },
+        error: function (data) {
+          console.log(data);
+        },
+      });
+    },
+
+
     closebox(e) {
       this.formbox = 0;
       this.$message({
@@ -272,6 +320,7 @@ export default {
           success: function(data) {
             _this.formbox = 0;
             //_this.$set(_this.tableData, "tableDataItem", data.data);
+           
           },
           error: function(data) {
             if (data == 500) {
@@ -307,26 +356,10 @@ export default {
     },
     addcust() {
       this.formbox = 2;
+      this.formboxmsg={};
     }
   },
-  beforeMount: function() {
-    let _this = this;
-    this.$ajax({
-      url: api.custQuery,
-      data: {
-        size: 10,
-        page: 1
-      },
-      type: "POST",
-      success: function(data) {
-        _this.$set(_this.tableData, "tableDataItem", data.data);
-      },
-      error: function(data) {
-        if (data == 500) {
-        }
-      }
-    });
-  }
+  
 };
 </script>
 
@@ -370,5 +403,15 @@ export default {
   margin-bottom: 10px;
   margin-right: 50px;
   text-align: right;
+}
+.pageStyle {
+  height: 35px;
+  margin-left: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.pageChange {
+  display: flex;
+  align-items: center;
 }
 </style>

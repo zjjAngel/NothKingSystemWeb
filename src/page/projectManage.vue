@@ -291,8 +291,8 @@ mounted() {
       let _this = this;
       _this.pageSize = e;
       const beforeMount = {
-        pageNum: _this.pageNum,
-        pageSize: _this.pageSize,
+        page: _this.pageNum,
+        size: _this.pageSize,
       };
        this.$ajax({
         url: "http://146.56.200.9:8067/project/query",
@@ -301,7 +301,12 @@ mounted() {
         success: function (data) {
           // _this.$set(_this.tableData,"tableDataItem",data.data) ;
           _this.tableData.tableDataItem=data.data;
-          _this.total = 20;
+          if(data.data.length==0){
+             _this.total =0;
+          }else{
+            _this.total = data.data[0].totalsize;
+          }
+          
         },
         error: function (data) {
           console.log(data);
@@ -313,8 +318,8 @@ mounted() {
       let _this = this;
       _this.pageNum = val;
       const beforeMount = {
-        pageNum: val,
-        pageSize: _this.pageSize,
+        page: val,
+        size: _this.pageSize,
       
         // roleId: this.projectQuery,//要改
       };
@@ -324,7 +329,7 @@ mounted() {
         type: "POST",
         success: function (data) {
           _this.tableData.tableDataItem = data.data;
-          _this.total = 20;
+          _this.total = data.data[0].totalsize;
         },
         error: function (data) {
           console.log(data);

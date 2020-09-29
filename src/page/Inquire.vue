@@ -2,7 +2,10 @@
   <div>
     <div class="client-page">
       <el-row class="clinet-title">
-        <p>需求查询</p>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item>需求管理</el-breadcrumb-item>
+          <el-breadcrumb-item>需求查询</el-breadcrumb-item>
+        </el-breadcrumb>
       </el-row>
       <el-row class="query-conditions">
         <el-col :span="5">
@@ -38,9 +41,9 @@
             <el-select style="width:10vw" v-model="position" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in positionOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.numNo"
+                :label="item.position"
+                :value="item.numNo"
               ></el-option>
             </el-select>
           </template>
@@ -48,17 +51,14 @@
         <el-col :span="5">
           <template>
             <span>优先级</span>
-            <el-select
-              style="width:10vw"
-              v-model="priority"
-              size="mini"
-              placeholder="请选择"
-            >
+
+              <el-select style="width:10vw" v-model="priority" size="mini" placeholder="请选择">
+
               <el-option
                 v-for="item in priorityOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.numNo"
+                :label="item.priority"
+                :value="item.numNo"
               ></el-option>
             </el-select>
           </template>
@@ -67,7 +67,6 @@
 
 
           <el-button type="primary" @click="queryData" >搜索</el-button>
-
 
         </el-col>
       </el-row>
@@ -113,8 +112,17 @@
             ></el-input-number>
           </div>
           <div>
-            <el-pagination background layout="pager" :total="total"></el-pagination>
+            <el-pagination
+              background
+              layout="pager"
+              :page-size="pageSize"
+              @current-change="pageQuery"
+              :total="total"
+            ></el-pagination>
           </div>
+          <!-- <div>
+            <el-pagination background layout="pager" :total="total"></el-pagination>
+          </div> -->
         </div>
       </el-row>
 
@@ -146,42 +154,8 @@ export default {
        pageNum: 1,
        pageSize: 10,
        total:0,
-      positionOptions: [
-        {
-          value: "UI设计师",
-          label: "UI设计师"
-        },
-        {
-          value: "H5",
-          label: "H5"
-        },
-        {
-          value: "java工程师",
-          label: "java工程师"
-        },
-        {
-          value: "php工程师",
-          label: "php工程师"
-        },
-        {
-          value: "DBA",
-          label: "DBA"
-        }
-      ],
-      priorityOptions: [
-        {
-          value: "高",
-          label: "高"
-        },
-        {
-          value: "中",
-          label: "中"
-        },
-        {
-          value: "低",
-          label: "低"
-        }
-      ],
+      positionOptions: [],
+      priorityOptions: [],
 
       requireCust: "",
       project: "",
@@ -211,7 +185,7 @@ export default {
 
 mounted(){
  let _this = this;
- debugger;
+ 
       this.$ajax({
       url:api.RequireSearch,
       data:{"option":"01"},//查询需求客户
@@ -234,12 +208,15 @@ mounted(){
 
         console.log.data;
          _this.tableData= data.data;
-
+        _this. positionOptions= data.data;
+        _this.priorityOptions = data.data;
       },
       error:function(data){
         console.log(data);
       },
     })
+
+quer
 
 },
 
@@ -317,24 +294,50 @@ mounted(){
 
       }
     },
-
- queryData() {
+ handleChange(e) {
+         console.log("api:"+api);
+       debugger;
+      console.log("分页调整", e);
       let _this = this;
-      const queryData = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
+      _this.pageSize = e;
+      const beforeMount = {
+        page: _this.pageNum,
+        size: _this.pageSize,
       };
-
-      //  queryData=_this.inputAjax;
-
-      this.$ajax({
+       this.$ajax({
         url: api.RequireSearch,
-        data: queryData,
+        data: RequireSearch,
         type: "POST",
         success: function (data) {
+          // _this.$set(_this.tableData,"tableDataItem",data.data) ;
+          _this.tableData.tableDataItem=data.data;
+          if(data.data.length==0){
+             _this.total =0;
+          }else{
+            _this.total = data.data[0].totalsize;
+          }
+          
+        },
+        error: function (data) {
           console.log(data);
-          _this.tableData = data;
-         // _this.total = data.data.total;
+        },
+      });
+    },
+     pageQuery(val) {
+       debugger;
+      let _this = this;
+      _this.pageNum = val;
+      const beforeMount = {
+        page: val,
+        size: _this.pageSize,
+      };
+      this.$ajax({
+        url: api.RequireSearch,//要改
+        data: requi,
+        type: "POST",
+        success: function (data) {
+          _this.tableData.tableDataItem = data.data;
+          _this.total = data.data[0].totalsize;
         },
         error: function (data) {
           console.log(data);
@@ -342,10 +345,8 @@ mounted(){
       });
     },
 
-     handleChange(e) {
-      console.log("分页调整", e);
-      this.pageSize = e;
-    },
+
+
     closebox(e) {
       this.reqbox = 0;
       this.$message({
@@ -411,22 +412,22 @@ mounted(){
     }
   },
   // beforeMount: function() {
-    // let _this = this;
-    // //
-    // this.$ajax({
-    //   url: api.requireSelectRequireCust,
-    //   data: {},
-    //   type: "POST",
-    //   success: function(data) {
-    //     console.log(data)
-    //     _this.requireCustOptions = data.data
-    //   },
-    //   error: function(data) {
-    //     console.log(data)
-    //     if (data == 500) {
-    //     }
-    //   }
-    // });
+  //   let _this = this;
+  //   //
+  //   this.$ajax({
+  //     url: api.requireSelectRequireCust,
+  //     data: {},
+  //     type: "POST",
+  //     success: function(data) {
+  //       console.log(data)
+  //       _this.requireCustOptions = data.data
+  //     },
+  //     error: function(data) {
+  //       console.log(data)
+  //       if (data == 500) {
+  //       }
+  //     }
+  //   });
   // }
 };
 </script>

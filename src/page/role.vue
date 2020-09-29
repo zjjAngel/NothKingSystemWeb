@@ -3,8 +3,8 @@
     <div class="client-page">
       <el-row class="clinet-title">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item>需求管理</el-breadcrumb-item>
-          <el-breadcrumb-item>需求查询</el-breadcrumb-item>
+          <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+          <el-breadcrumb-item>角色管理</el-breadcrumb-item>
         </el-breadcrumb>
       </el-row>
       <el-row class="query-conditions">
@@ -73,9 +73,7 @@
               :total="total"
             ></el-pagination>
           </div>
-          <!-- <div>
-            <el-pagination background layout="pager" :total="total"></el-pagination>
-          </div> -->
+         
         </div>
       </el-row>
     </div>
