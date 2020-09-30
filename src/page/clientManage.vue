@@ -148,7 +148,7 @@ export default {
       },
       formbox: 0,
       formboxmsg: {},
-      areaOptions:[{region:"西北区"},{region:"华南区"},{region:"华东区"},{region:"鸟不拉屎区"}]
+      areaOptions:[{region:"西北区"},{region:"华南区"},{region:"华东区"},{region:"东北区"}]
     };
   },
   components: {

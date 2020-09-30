@@ -16,7 +16,7 @@
                 v-for="item in requireCustOptions"
                 :key="item.menu_id"
                 :label="item.menu_name"
-                :value="item.menu_id"
+                :value="item.menu_name"
               @click.native="checkFather(item.menu_id,item.menu_level_parent)" ></el-option>
             </el-select>
           </template>
@@ -29,7 +29,7 @@
                 v-for="item in fatherMenu"
                 :key="item.menu_id"
                 :label="item.menu_name"
-                :value="item.menu_id"
+                :value="item.menu_name"
               ></el-option>
             </el-select>
           </template>
@@ -283,14 +283,28 @@ export default {
     },
     queryData() {
       let _this = this;
-      // const queryData = {
-      //   pageNum: this.pageNum,
-      //   pageSize: this.pageSize,
-      // };
-      // queryData=_this.inputAjax;
+      let query = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      _this.inputAjax.menuName=_this.requireCust;
+      _this.inputAjax.menu_level_parent=_this.project;
+       if(_this.inputAjax.pageNum =null  ||_this.inputAjax.pageNum==""){
+         delete _this.inputAjax.pageNum;
+       }
+       if(_this.inputAjax.pageSize =null  ||_this.inputAjax.pageSize==""){
+         delete _this.inputAjax.pageSize;
+       }
+        if(_this.inputAjax.menu_level_parent =null  ||_this.inputAjax.menu_level_parent==""){
+         delete _this.inputAjax.menu_level_parent;
+       }
+       if(_this.inputAjax.status =null  ||_this.inputAjax.status==""){
+         delete _this.inputAjax.status;
+       }
+      query =_this.inputAjax;
       this.$ajax({
         url: api.queryMenu,
-        data: queryData,
+        data: query,
         type: "GET",
         success: function (data) {
           console.log(data);
@@ -423,19 +437,19 @@ export default {
           type: "PUT",
           success: function (data) {
             _this.formbox = 0;
-            queryData();
-             this.$ajax({
-              url: api.queryMenu,
-              data: queryData,
-              type: "GET",
-              success: function (data) {
-                _this.tableData = data.data.list;
-                _this.total = data.data.total;
-              },
-              error: function (data) {
-                console.log(data);
-              },
-            });
+            _this.queryData();
+            //  this.$ajax({
+            //   url: api.queryMenu,
+            //   data: queryData,
+            //   type: "GET",
+            //   success: function (data) {
+            //     _this.tableData = data.data.list;
+            //     _this.total = data.data.total;
+            //   },
+            //   error: function (data) {
+            //     console.log(data);
+            //   },
+            // });
           },
           error: function (data) {
             if (data == 500) {

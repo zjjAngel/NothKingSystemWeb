@@ -36,7 +36,7 @@ export default {
           {
             "url": api.login1,
             "data" : {
-              "userid": "ZHUJXD",
+              "userid": "",
               "username": this.form.username,
               "password": this.form.password
             },

@@ -124,7 +124,7 @@ export default {
       roleNameValue:'',
       roleNameList:[],
       inputQuery:{},
-
+      addflag:"",
        inputAjax:{ 
          "user_role":"",
          "role_name":"",
@@ -208,7 +208,6 @@ this.$ajax({
                   type: "success",
                   message: "删除成功!",
                 });
-
               _this.queryData();
               },
               error: function (data) {
@@ -246,16 +245,23 @@ this.$ajax({
       
       console.log(document.getElementById("role1").value);
       console.log(_this.roleNameValue);
+      debugger;
 
-      const queryData = {
+      const query= {
       pageNum: this.pageNum,
       pageSize: this.pageSize,
       // "roleId": this.inputQuery.roleId
-      roleName:this.inputQuery.roleName
-      };
+      roleName:typeof(this.inputQuery.roleName) == "undefined"?'':this.inputQuery.roleName==''?null:this.inputQuery.roleName
+      };//这里要改
+      if(query.roleName==null
+      ||query.roleName==''
+      ||_this.addflag=="02"){
+        delete query.roleName;
+      }
+
       this.$ajax({
         url: api.roleNameList,
-        data: queryData,
+        data: query,
         type: "GET",
         success: function (data) {
             console.log(data);
@@ -363,7 +369,6 @@ this.$ajax({
       console.log(e);
       let _this = this;
       delete e.formboxmsg.user_role;
-      
       if (e.formbox == 1) {
         // 编辑
         this.$ajax({
@@ -371,7 +376,10 @@ this.$ajax({
           data: e.formboxmsg,
           type: "POST",
           success: function (data) {
+            console.log(data);
             _this.formbox = 0;
+           _this.pageNum=1;
+            _this.queryData();
           },
           error: function (data) {
             if (data == 500) {
@@ -384,25 +392,30 @@ this.$ajax({
           e.formboxmsg.ROLE_NAME=e.formboxmsg.ROLE_NAME;
           delete e.formboxmsg.back_up;
           delete e.formboxmsg.role_name;
+          debugger;
         // 增加
         this.$ajax({
           
           url:api.roleAdd,
           data: e.formboxmsg,
           type: "POST",
+          async:false,
           success: function (data) {
             console.log(data);
-            //_this.tableData.tableDataItem.push(data.data);
             _this.formbox = 0;
-
             _this.$message({
               type: "success",
               message: "新增成功!若想角色生效，请分配用户！",
             });     
-              _this.roleNameValue=''
-             _this.inputQuery.roleName="";
+            //  _this.sleep(2000);
+          // _this.roleNameValue=''
+          // _this.inputQuery.roleName="";
+          debugger;
+          _this.addflag="02"
           _this.queryData();
-           
+          alert("hehe");
+      
+      
           },
           error: function (data) {
             if (data !== 500) {
@@ -414,7 +427,19 @@ this.$ajax({
             }
           },
         });
+        
       }
+    },
+       //参数n为休眠时间，单位为毫秒:
+     sleep(n) {
+        var start = new Date().getTime();
+        //  console.log('休眠前：' + start);
+        while (true) {
+            if (new Date().getTime() - start > n) {
+                break;
+            }
+        }
+        // console.log('休眠后：' + new Date().getTime());
     },
     addcust() {
       let _this=this;
@@ -422,6 +447,8 @@ this.$ajax({
       debugger;
       _this.formboxmsg.ROLE_NAME = "";
       _this.formboxmsg.BACK_UP = "";
+
+       this.formboxmsg={};
     },
   },
 };

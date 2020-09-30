@@ -64,19 +64,18 @@ export default {
 </script>
 
 <style scoped>
-/* .reqbox {
+.reqbox{
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
-  /* background-color: #ffffff; */
-  /* position: fixed;
+  position: fixed;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999; */
-/* } */ 
+  z-index: 999;
+} 
 label {
   font-weight: bold;
   min-width: 120px;

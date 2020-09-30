@@ -14,6 +14,15 @@
         <label>备注</label>
         <input type="text" v-model="formboxmsg.BACK_UP"/>
       </div>
+    <!-- <div class="flex-row" @mouseover="onDplOver($event)" @mouseout="onDplOut($event)">
+      <label>分配权限</label>
+      <input type="checkbox" v-model="formboxmsg.FEIGN_IDS"/>
+      <ul>
+            <li>北京</li>
+            <li>上海</li>
+            <li>广州</li>
+        </ul>
+    </div> -->
      
       <div class="flex-row">
         <div class="flex-row">

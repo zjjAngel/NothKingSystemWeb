@@ -250,7 +250,7 @@ mounted(){
         _this.requireCustOptions=data.data;
         document.getElementById("resIn").value=data.data[0].project;
         _this.ifshow=true;
-         _this.refresh();
+        
       },
       error: function (data){
         console.log(data);
@@ -298,7 +298,8 @@ mounted(){
                   type: "success",
                   message: "删除成功!"
                 });
-                _this.queryData();
+                // _this.queryData();
+                _this.refresh();
               },
               error: function(data) {
                 if (data == 500) {
